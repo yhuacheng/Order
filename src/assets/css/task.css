@@ -1,0 +1,166 @@
+body{
+	margin: 0;
+	padding: 0;
+}
+.taskItme{
+	width: 90%;
+	margin: 0 auto;
+	height: 200px;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+	margin-top: 30px;
+}
+.mr10{
+	margin-right: 10px;
+}
+.mb20{
+	margin-bottom: 20px;
+}
+.mt30{
+	margin-top: 30px;
+}
+.ml50{
+  margin-left: 50px;
+}
+.mt5{
+  margin-top: 5px;
+}
+.pl30{
+	padding-left: 30px;
+}
+.wid70{
+  width: 70%;
+}
+.shows{
+	display: none;
+}
+/*创建任务*/
+.colTxt{
+	color: #e87901;
+	font-weight: 700;
+}
+.col9{
+	color: #999;
+}
+.content{
+	width: 80%;
+	margin: 30px auto 100px auto;
+}
+.taskTit{
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+}
+
+.redRequired{
+	color: #f00;
+}
+.tabTitle{
+	height: 60px;
+	line-height: 60px;
+	text-align: center;
+	color: #fff;
+	background: #7a7df2;
+}
+.zengTit{
+	background: #009688;
+}
+.serviceTit{
+	background: #7eb338;
+}
+/*任务类型*/
+.contentType{
+	width: 70%;
+	margin: 0 auto;
+
+	}
+.TypeItems{
+	display: flex;
+	justify-content: space-between;
+	border: 1px solid #eee;
+	/*height: 180px;*/
+	padding: 30px;
+	box-sizing: border-box;
+}
+.titleName{
+	font-size: 16px;
+	margin-bottom: 10px;
+	display: inline-block;
+}
+.itemPrice{
+	font-size: 16px;
+	color: #FF0000;
+}
+.des{
+	overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-right: 100px;
+}
+.types{
+	font-size: 16px;
+}
+
+.layui-laydate-content>.layui-laydate-list {
+	padding-bottom: 0px;
+	overflow: hidden;
+}
+.layui-laydate-content>.layui-laydate-list>li{
+	width:50%
+}
+
+.merge-box .scrollbox .merge-list {
+	padding-bottom: 5px;
+}
+/*总价固定底部*/
+.totalPrice{
+	position: fixed;
+	bottom: 0;
+	width: 150px;
+	text-align: center;
+	left: 50px;
+	height: 50px;
+	line-height: 50px;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+	font-size: 16px;
+	color: #f00;
+	background: #fff;
+	z-index: 999;
+}
+/*点赞任务*/
+.headTxt{
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+	margin-bottom: 40px;
+	padding-left: 8px;
+}
+/*问题*/
+.areaHeight{
+	min-height: 0;
+}
+@media screen and (max-width: 450px){
+.contentType{
+	width: 96%;
+}
+	.des{
+		margin-right: 20px;
+	}
+	.TypeItems{
+		padding: 10px;
+	}
+	.layui-btn{
+		height: 30px;
+		padding: 0 10px;
+		line-height: 30px;
+	}
+	.layui-form-item .layui-inline{
+		display: inline-block;
+		margin-bottom: 0;
+	}
+	.content{
+		width: 96%;
+	}
+}

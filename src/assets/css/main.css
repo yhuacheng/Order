@@ -1,0 +1,454 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app,
+.wrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  /*overflow: hidden;*/
+}
+
+body {
+  font-family: 'PingFang SC', "Helvetica Neue", Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
+}
+
+a {
+  text-decoration: none
+}
+
+.content-box {
+  position: absolute;
+  left: 250px;
+  right: 0;
+  top: 70px;
+  bottom: 0;
+  overflow-y: scroll;
+  -webkit-transition: left .3s ease-in-out;
+  transition: left .3s ease-in-out;
+}
+
+.content {
+  width: auto;
+  padding: 40px;
+}
+
+.content-collapse {
+  left: 65px;
+}
+
+.container {
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.crumbs {
+  margin-bottom: 20px;
+}
+
+.pagination {
+  margin: 20px 0;
+  text-align: right;
+}
+
+.plugins-tips {
+  padding: 20px 10px;
+  margin-bottom: 20px;
+}
+
+.el-button + .el-tooltip {
+  margin-left: 10px;
+}
+
+.el-table tr:hover {
+  background: #f6faff;
+}
+
+.mgb20 {
+  margin-bottom: 20px;
+}
+
+.move-enter-active,
+.move-leave-active {
+  transition: opacity .5s;
+}
+
+.move-enter,
+.move-leave {
+  opacity: 0;
+}
+
+/*BaseForm*/
+
+.form-box {
+  width: 600px;
+}
+
+.form-box .line {
+  text-align: center;
+}
+
+.el-time-panel__content::after,
+.el-time-panel__content::before {
+  margin-top: -7px;
+}
+
+.el-time-spinner__wrapper .el-scrollbar__wrap:not(.el-scrollbar__wrap--hidden-default) {
+  padding-bottom: 0;
+}
+
+/*Upload*/
+
+.pure-button {
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  border-radius: 3px;
+}
+
+.g-core-image-corp-container .info-aside {
+  height: 45px;
+}
+
+.el-upload--text {
+  background-color: #fff;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  box-sizing: border-box;
+  width: 360px;
+  height: 180px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.el-upload--text .el-icon-upload {
+  font-size: 67px;
+  color: #97a8be;
+  margin: 40px 0 16px;
+  line-height: 50px;
+}
+
+.el-upload--text {
+  color: #97a8be;
+  font-size: 14px;
+  text-align: center;
+}
+
+.el-upload--text em {
+  font-style: normal;
+}
+
+/*VueEditor*/
+
+.ql-container {
+  min-height: 400px;
+}
+
+.ql-snow .ql-tooltip {
+  transform: translateX(117.5px) translateY(10px) !important;
+}
+
+.editor-btn {
+  margin-top: 20px;
+}
+
+/*markdown*/
+
+.v-note-wrapper .v-note-panel {
+  min-height: 500px;
+}
+.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus{
+	border-color: #14CEB2;
+}
+img {
+	border: none;
+}
+
+.mc-15 {
+	margin: 15px;
+}
+
+.ml30 {
+	margin-left: 30px;
+}
+
+.ml20 {
+	margin-left: 20px;
+}
+
+.mb20 {
+	margin-bottom: 20px;
+}
+
+.mb10 {
+	margin-bottom: 10px;
+}
+
+.mb50 {
+	margin-bottom: 50px;
+}
+
+.mb5 {
+	margin-bottom: 5px;
+}
+
+.mb120 {
+	margin-bottom: 120px;
+}
+
+.mr30 {
+	margin-right: 30px;
+}
+
+.mt10 {
+	margin-top: 10px;
+}
+
+.mt20 {
+	margin-top: 20px;
+}
+
+.mt50 {
+	margin-top: 50px;
+}
+
+.mr10 {
+	margin-right: 10px;
+}
+
+.mt30 {
+	margin-top: 30px;
+}
+
+.ml50 {
+	margin-left: 50px;
+}
+
+.mr5 {
+	margin-right: 5px;
+}
+
+.mt5 {
+	margin-top: 5px;
+}
+
+.pl30 {
+	padding-left: 30px;
+}
+.pb10{
+	padding-bottom: 10px;
+}
+
+.tabsTxt {
+	font-size: 14px;
+}
+
+.pp {
+	padding: 30px 20px;
+}
+
+.fz14 {
+	font-size: 14px;
+}
+
+.fz30 {
+	font-size: 30px;
+}
+
+.fz20 {
+	font-size: 20px;
+}
+
+.fz18 {
+	font-size: 18px;
+}
+
+.fz16 {
+	font-size: 16px
+}
+
+.col {
+	color: #fff;
+}
+
+.col9 {
+	color: #999;
+}
+
+.col6 {
+	color: #666;
+}
+
+.wid,
+.minWid {
+	width: 70%;
+}
+
+.wid100 {
+	width: 100%;
+}
+
+.fg {
+	margin: 0 5px;
+	font-weight: 700;
+	color: #c0c4cc;
+}
+
+.fw {
+	font-weight: 600;
+}
+
+.fleft {
+	float: left;
+}
+
+.fright {
+	float: right;
+}
+
+.modelRight {
+	margin-left: 30px;
+}
+
+.txtLeft {
+	text-align: left;
+}
+
+.err {
+	border: 1px solid #f00;
+	border-radius: 4px;
+}
+
+.payImg {
+	/*width:280px;*/
+	width: 100%;
+	height: 455px;
+	background: #eee;
+}
+
+.el-dialog__header {
+	background: #f2edf3;
+}
+
+.el-button--primary {
+	background: #14ceb2;
+	border-color: #14ceb2;
+}
+
+.el-button--primary:hover {
+	background: #73d7cd;
+	border-color: #73d7cd;
+}
+
+.el-radio__input.is-checked .el-radio__inner {
+	background: #14ceb2;
+	border-color: #14ceb2;
+}
+
+.el-radio__input.is-checked+.el-radio__label {
+	color: #14CEB2;
+}
+
+.el-radio__inner:hover {
+	border-color: #14CEB2;
+}
+.el-radio-button__orig-radio:checked+.el-radio-button__inner{
+	background: #14ceb2;
+	border-color: #14ceb2;
+	box-shadow: -1px 0 0 0 #14ceb2;
+}
+.el-radio-button__inner:hover{
+	color: #14CEB2;
+}
+.el-checkbox__input.is-checked+.el-checkbox__label{
+	color: #14CEB2;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+	background: #14ceb2;
+	border-color: #14ceb2;
+}
+.el-button--text{
+	color: #14CEB2;
+}
+.el-form-item.is-success .el-input__validateIcon {
+	color: #14CEB2;
+}
+/* 模态框纵向外滚动条改为内滚动条 */
+
+
+/* 默认模态框 */
+
+.el-dialog {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: 0 !important;
+	transform: translate(-50%, -50%);
+	max-height: calc(100% - 50px);
+	max-width: calc(100% - 50px);
+	display: flex;
+	flex-direction: column
+}
+
+.el-dialog>.el-dialog__body {
+	overflow: auto
+}
+
+.el-dialog>.el-dialog__footer {
+	background: #f2edf3;
+	padding: 10px 20px;
+}
+.el-tabs__active-bar{
+	background-color: #14ceb2;
+}
+.el-tabs__item.is-active,.el-tabs__item:hover{
+	color: #14CEB2;
+}
+.el-dialog__headerbtn .el-dialog__close:hover{
+	color:#14CEB2;
+}
+.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active{
+	color: #14CEB2;
+}
+
+/* 固定大小模态框(dia-log标签添加custom-class="fixed-dialog")*/
+
+.fixed-dialog {
+	height: calc(100% - 50px);
+	width: calc(100% - 50px);
+}
+
+.fixed-dialog>.el-dialog__body {
+	margin-bottom: 120px;
+}
+
+.fixed-dialog>.el-dialog__footer {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+}
+@media screen and (max-width: 580px){
+  .el-dialog {
+    width: 90% !important;
+  }
+}
+@media screen and (max-width: 768px){
+  .el-dialog {
+    width: 90% !important;
+  }
+}
+@media screen and (max-width: 1024px){
+  .el-dialog {
+    width: 90% !important;
+  }
+}
