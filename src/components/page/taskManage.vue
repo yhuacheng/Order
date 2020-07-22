@@ -55,6 +55,9 @@
         <el-table-column prop="OrderNumbers" label="任务编码" align="center" width="170">
           <template slot-scope="scope">
             <el-button type="text" @click="viewDetails(scope.$index,scope.row)">{{scope.row.OrderNumbers}}</el-button>
+            <p>
+              <span v-if="scope.row.NoComment==1"><span style="color: #F56C6C;font-size: 10px;">免评单</span></span>
+            </p>
           </template>
         </el-table-column>
         <el-table-column prop="countryName" label="国家" align="center"></el-table-column>
@@ -499,7 +502,7 @@
         _this.OrderId = _this.allOrderData[index].Id
         _this.serviceType = _this.allOrderData[index].ServiceType
         _this.assessForm.productLink = _this.allOrderData[index].ProductLink
-        _this.assessForm.ProductImage = this.GLOBAL.IMG_URL+_this.allOrderData[index].ProductImage
+        _this.assessForm.ProductImage = this.GLOBAL.IMG_URL + _this.allOrderData[index].ProductImage
       },
       //评论确定
       evalEditSubmit() {

@@ -48,6 +48,11 @@
               <span>{{viewTaskData.ExecutionTime}}</span>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item label='备注：' prop="Remarks">
+              <span>{{viewTaskData.Remarks}}</span>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
     </el-card>
@@ -102,9 +107,9 @@
               <span style="color: red;" v-show="viewTaskData.Total!=null"><span>￥</span> {{viewTaskData.Total}}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label='备注：' prop="Remarks">
-              <span>{{viewTaskData.Remarks}}</span>
+          <el-col :span="24">
+            <el-form-item label='购买截图：' prop="BuyImage">
+              <img :src="GLOBAL.IMG_URL+viewTaskData.BuyImage" v-if="viewTaskData.BuyImage" style="max-width: 80%;" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -121,9 +126,23 @@
               <a :href="viewTaskData.ProductLink">{{viewTaskData.ProductLink}}</a>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label='评价截图：' prop="Remarks">
-              <img :src="GLOBAL.IMG_URL+viewTaskData.ProductImage" v-if="viewTaskData.ProductImage" class="eval_img" />
+              <img :src="GLOBAL.IMG_URL+viewTaskData.ProductImage" v-if="viewTaskData.ProductImage" style="max-width: 80%;" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-card>
+    <el-card class="box-card mt20">
+      <div slot="header" class="clearfix">
+        <span>交易信息</span>
+      </div>
+      <el-form :model='viewTaskData' ref='viewTaskData' label-width='150px'>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label='交易截图：' prop="Remarks">
+              <img :src="viewTaskData.DealIamge" v-if="viewTaskData.DealIamge" style="max-width: 80%;" />
             </el-form-item>
           </el-col>
         </el-row>
