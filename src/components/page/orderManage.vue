@@ -128,7 +128,7 @@
             <el-col :span="12" :xs="24">
               <el-form-item label="产品价格" class="disInline minWid" prop="ProductPrice">
                 <el-input type="text" v-model="taskForm.ProductPrice" @blur="getAddFee" placeholder="请输入产品价格">
-                  <template slot="prepend">{{Currency}}</template>
+                  <template slot="append">{{Currency}}</template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -553,7 +553,7 @@
             _this.allOrderData[i].ProductKeyword = proKey
             _this.allOrderData[i].state = _this.allOrderData[i].OrderState
           }
-        })
+        }).catch((e) => {})
       },
 
       // 格式化订单状态
@@ -579,7 +579,7 @@
         }
         GetOrderState(param).then(res => {
           _this.allState = res.data
-        })
+        }).catch((e) => {})
       },
 
       //每页条数
@@ -1035,6 +1035,9 @@
         _this.taskForm.ServiceFee = 0
         _this.taskForm.OrderTotal = 0
         _this.taskForm.ProductTotal = 0
+        _this.addService = 0
+        _this.serviceUnit = 0
+        _this.ExRate = 0
         _this.Currency = ''
         _this.taskForm = {
           CountryId: '',

@@ -299,9 +299,7 @@
         }
         taskStatus(param).then(res => {
           _this.statusList = res.data.list
-        }).catch(error => {
-          console.log(error)
-        })
+        }).catch((e) => {})
       },
       // 初始化任务列表
       getAllData() {
@@ -329,9 +327,7 @@
             }
             _this.allOrderData[i].state = _this.allOrderData[i].TaskState
           }
-        }).catch(error => {
-          console.log(error)
-        })
+        }).catch((e) => {})
       },
       // 初始化国家查询
       getAllCountry() {
@@ -341,9 +337,7 @@
         }
         getCountry(param).then((res) => {
           _this.cities = res.data.list
-        }).catch(err => {
-          console.log(err)
-        })
+        }).catch((e) => {})
       },
       // 国家全选
       handleCheckAllChange(val) {
