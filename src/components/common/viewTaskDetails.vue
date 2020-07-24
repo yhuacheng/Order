@@ -12,7 +12,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label='下单类型：' prop="ServiceType">
+            <el-form-item label='任务类型：' prop="ServiceType">
               <span>{{viewTaskData.ServiceType}}</span>
             </el-form-item>
           </el-col>
@@ -43,6 +43,11 @@
                 text-color="#ff9900"></el-rate>
             </el-form-item>
           </el-col>
+          <el-col :span="12" v-if="viewTaskData.ServiceType === '评后返'">
+            <el-form-item label='预计价格：' prop="ProductPrice">
+              <span v-show="viewTaskData.ProductPrice!=null"><span>{{viewTaskData.symbol}}</span>{{viewTaskData.ProductPrice}}</span>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label='任务执行时间：' prop="ExecutionTime">
               <span>{{viewTaskData.ExecutionTime}}</span>
@@ -68,18 +73,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label='Amazon单号：' prop="AmazonNumber">
+            <el-form-item label='Amazon购买单号：' prop="AmazonNumber">
               <span>{{viewTaskData.AmazonNumber}}</span>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="viewTaskData.ServiceType === '见单返本'">
             <el-form-item label='产品金额：' prop="AmazonProductPrice">
               <span v-show="viewTaskData.AmazonProductPrice!=null"><span>{{viewTaskData.symbol}}</span>{{viewTaskData.AmazonProductPrice}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12" v-if="viewTaskData.ServiceType === '评后返'">
-            <el-form-item label='预计价格：' prop="ProductPrice">
-              <span v-show="viewTaskData.ProductPrice!=null"><span>{{viewTaskData.symbol}}</span>{{viewTaskData.ProductPrice}}</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -98,8 +98,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label='汇率：' prop="Total">
-              <span>{{viewTaskData.Total}}</span>
+            <el-form-item label='增值费：' prop="OrderAddedFee">
+              <span>{{viewTaskData.OrderAddedFee}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label='服务费：' prop="OrderUnitPriceSerCharge">
+              <span>{{viewTaskData.OrderUnitPriceSerCharge}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label='汇率：' prop="OrderExchangeRate">
+              <span>{{viewTaskData.OrderExchangeRate}}</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">

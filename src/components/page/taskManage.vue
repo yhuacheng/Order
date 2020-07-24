@@ -61,12 +61,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="countryName" label="国家" align="center"></el-table-column>
+        <el-table-column prop="ServiceType" label="任务类型" align="center"></el-table-column>
         <el-table-column prop="Asin" label="产品ASIN" align="center"></el-table-column>
-        <el-table-column prop="AmazonProductPrice" label="产品价格" align="center"></el-table-column>
-        <el-table-column prop="ServiceType" label="服务类型" align="center"></el-table-column>
-        <el-table-column prop="AmazonNumber" label="订单号" align="center"></el-table-column>
-        <el-table-column prop="ProductName" label="产品名称" align="center" width="100" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="BuyTime" label="下单时间" align="center" width="180"></el-table-column>
+        <el-table-column prop="ProductName" label="产品名称" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="AmazonNumber" label="购买单号" align="center"></el-table-column>
+        <el-table-column prop="AmazonProductPrice" label="购买价格" align="center"></el-table-column>
+        <el-table-column prop="BuyTime" label="购买时间" align="center"></el-table-column>
         <el-table-column prop="state" label="状态" align="center" :formatter="txtOrderStatus"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">

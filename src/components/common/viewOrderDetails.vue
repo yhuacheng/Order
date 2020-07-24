@@ -58,7 +58,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label='产品图片：' prop="ProductPictures">
-              <img :src="viewOrderData.ProductPictures" alt="" class="eval_img">
+              <img v-show="viewOrderData.ProductPictures" :src="'/'+viewOrderData.ProductPictures" class="eval_img">
             </el-form-item>
           </el-col>
         </el-row>
