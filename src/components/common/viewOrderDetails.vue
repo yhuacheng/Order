@@ -13,7 +13,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label='下单类型：' prop="ServiceType">
-              <span>{{viewOrderData.ServiceType}}</span>
+              <span v-if="viewOrderData.ServiceType==1">见单返</span>
+              <span v-if="viewOrderData.ServiceType==2">评后返</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -23,7 +24,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label='订单状态：' prop="OrderState">
-              <span>{{viewOrderData.OrderState}}</span>
+              <span v-if="viewOrderData.OrderState==1">待确认</span>
+              <span v-if="viewOrderData.OrderState==2">待分配</span>
+              <span v-if="viewOrderData.OrderState==3">已分配</span>
+              <span v-if="viewOrderData.OrderState==4">已完成</span>
+              <span v-if="viewOrderData.OrderState==5">已取消</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -72,7 +77,8 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label='关键词类型：' prop="KeywordType">
-              <span>{{viewOrderData.KeywordType}}</span>
+              <span v-if="viewOrderData.KeywordType==1">产品关键词</span>
+              <span v-if="viewOrderData.KeywordType==2">CPC关键词</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -143,26 +149,7 @@
 <script>
   export default {
     name: 'viewOrderDetails',
-    props: ["viewOrderData"],
-    data() {
-      return {
-        form: {}
-      }
-    },
-    methods: {
-      //获取类型
-      getInfo(obj, param1, param2) {
-        for (let i = 0; i < obj.length; i++) {
-          if ((obj[i].TypeName == param1 && obj[i].Value == param2) ||
-            (obj[i].Value == param1 && obj[i].TypeName == param2)) {
-            return obj[i].Display;
-          }
-        }
-      },
-      backBtn() {
-        this.$router.push('/taskManage')
-      }
-    }
+    props: ["viewOrderData"]
   }
 </script>
 

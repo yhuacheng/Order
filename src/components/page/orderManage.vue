@@ -252,8 +252,7 @@
     </el-dialog>
 
     <!-- 付款-->
-    <el-dialog title="付款" :visible.sync="paymentModel" :close-on-click-modal="false" width="40%" center=""
-      :before-close="paymentClose">
+    <el-dialog title="付款" :visible.sync="paymentModel" :close-on-click-modal="false" width="40%" center :before-close="paymentClose">
       <el-row class="mb20 center">
         <el-col :span="12" :xs="24">
           <p>
@@ -906,7 +905,6 @@
                 _this.paymentForm.payMoney = _this.allTotal
                 _this.$refs['taskForm'].resetFields()
                 _this.closeModel()
-                _this.taskForm.ProductKeyword = ''
                 _this.payMent()
                 _this.allOrderList()
                 _this.allOrderStatus()
@@ -1038,9 +1036,6 @@
         let _this = this
         _this.addTaskModal = false
         _this.$refs['taskForm'].resetFields()
-        _this.taskForm.ServiceFee = 0
-        _this.taskForm.OrderTotal = 0
-        _this.taskForm.ProductTotal = 0
         _this.addService = 0
         _this.serviceUnit = 0
         _this.ExRate = 0
@@ -1070,33 +1065,8 @@
       // 查看详情
       viewDetails(index, row) {
         let _this = this
-        let obj = _this.obj
         _this.viewDetailModal = true
         _this.viewOrderData = row
-        let val = row
-        if (val.OrderState == 1) {
-          _this.viewOrderData.OrderState = '待确认'
-        } else if (val.OrderState == 2) {
-          _this.viewOrderData.OrderState = '待分配'
-        } else if (val.OrderState == 3) {
-          _this.viewOrderData.OrderState = '已分配'
-        } else if (val.OrderState == 4) {
-          _this.viewOrderData.OrderState = '已完成'
-        } else if (val.OrderState == 5) {
-          _this.viewOrderData.OrderState = '已取消'
-        }
-        if (val.ServiceType == 1) {
-          _this.viewOrderData.ServiceType = '见单返本'
-        } else if (val.ServiceType == 2) {
-          _this.viewOrderData.ServiceType = '评后返'
-        }
-        if (val.KeywordType == 1) {
-          _this.viewOrderData.KeywordType = '产品关键词'
-        } else if (val.KeywordType == 2) {
-          _this.viewOrderData.KeywordType = 'CPC关键词'
-        } else {
-          return false
-        }
       },
       // 详情关闭
       closeViewModel() {
