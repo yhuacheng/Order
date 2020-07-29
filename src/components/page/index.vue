@@ -16,7 +16,7 @@
             <el-row :gurre='20'>
               <el-col :span='12' :xs='24'>
                 <div>
-                  <img src="../../assets/image/log-in.png" alt="" style="width: 100%;" />
+                  <img src="../../assets/image/log-in.png" alt="" style="width: 80%;" />
                 </div>
               </el-col>
               <el-col :span='12' :xs='24' style='margin-top: 50px;'>
@@ -61,7 +61,6 @@
                       <el-form-item prop="comfirPwd" label='确认密码'>
                         <el-input v-model="resetPwdForm.comfirPwd" maxlength='16' type="password" autocomplete="off"
                           placeholder='请再次输入新密码'>
-
                         </el-input>
                       </el-form-item>
                       <el-form-item>
@@ -72,26 +71,15 @@
                 </el-tabs>
                 <el-form :model="formLogin" ref="formLogin" :rules='rules' class="demo-ruleForm" status-icon v-show='LoginShow==2'>
                   <div class="txtCenter fz30">登录</div>
-                  <el-form-item prop='PhoneNumber' label='手机'>
+                  <el-form-item prop='' label='手机'>
                     <el-input placeholder="请输入手机号" v-model="formLogin.PhoneNumber">
                     </el-input>
                   </el-form-item>
-                  <el-form-item prop='passwords' label='密码'>
+                  <el-form-item prop='' label='密码'>
                     <el-input type='password' v-model="formLogin.passwords" placeholder='请输入密码'></el-input>
                   </el-form-item>
-                  <!-- 			<el-form-item label='图形码' prop='imgsCode'>
-										<el-input v-model="formLogin.imgsCode" placeholder='请输入图形码'>
-										</el-input>
-									</el-form-item>
-									<div class="identifybox">
-										<div class='mb10'>
-											<img :src="codeImg" alt="" class="avatar">
-										</div>
-										<el-button type='text' class="textbtn ml20">看不清，换一张</el-button>
-									</div> -->
                   <el-form-item class="mt20">
-                    <el-button type="primary" v-loading.fullscreen.lock="fullscreenLoading" @click="loginIn('formLogin')"
-                      class='confirmLogin'>立即登录</el-button>
+                    <el-button type="primary" v-loading.fullscreen.lock="fullscreenLoading" @click="loginIn" class='confirmLogin'>立即登录</el-button>
                     <div class="flexBox">
                       <span class="forgetTxt" @click="register">立即注册</span>
                       <span class="forgetTxt2" @click="forgetPwd">忘记密码</span>
@@ -240,19 +228,6 @@
         <a name='about'></a>
         <div class="aboutCon">
           <p class="txtCenter fz30 aboutTit"><span class="fzTxtCol">关于我们</span></p>
-          <!--<div class="aboutBox">
-						<div class="picLeft">
-							<img src="../../assets/image/about1.jpg" alt="" style="height: 100%;width: 100%;" />
-						</div>
-						<div style="width: 50%;">
-							<div class="aboutUsDes">
-								<p class="aboutDes">amzBuy研发团队，拥有精湛、深厚的技术功底，具有多年电商系统开发经验，专注于数据挖掘和跨境电商云服务开发。 管理团队，是一群资深外贸老炮，拥有超过10年的跨境电商实战与传统行业运营经验，充分了解跨境电商卖家的需求和行业发展方向，为您的跨境之路保驾护航。</p>
-							</div>
-							<div style="height: 50%;">
-								<img src="../../assets/image/about2.jpg" style="height: 100%;width: 100%;" alt="" />
-							</div>
-						</div>
-					</div>-->
           <el-row class='aboutBox'>
             <el-col :span='12' :xs='24'>
               <img src="../../assets/image/about1.jpg" alt="" class="aboutLeftImg" />
@@ -279,25 +254,6 @@
         <p class="txtCenter footerTxt">Copyright ©2020 Buy System</p>
       </footer>
     </div>
-    <!-- 		<el-dialog title='验证码' :visible.sync='codeModal' :close-on-click-modal="false" width="30%">
-			<el-form :model="formReg" ref='formReg' :rules='rules' status-icon>
-				<el-form-item prop='imgsCode'>
-					<el-input v-model="formReg.imgsCode" placeholder='请输入图形码'>
-
-					</el-input>
-				</el-form-item>
-			</el-form>
-			<div class="identifybox">
-				<div>
-					<img :src="codeImg" alt="" class="avatar" @click="getImgCode">
-				</div>
-				<el-button @click="getImgCode" type='text' class="textbtn ml20">看不清，换一张</el-button>
-			</div>
-			<div slot='footer' class="dialog-footer">
-				<el-button type='primary' @click="regSendCode('formReg')">确定</el-button>
-				<el-button @click='codeModal=false'>取消</el-button>
-			</div>
-		</el-dialog> -->
   </div>
 </template>
 
@@ -530,7 +486,6 @@
     },
     created() {
       let _this = this
-      // this.getImgCode()
       let indexShow = this.$route.params.indexShow
       if (indexShow === undefined) {
         _this.indexShow = true
@@ -565,55 +520,10 @@
         }
         _this.axios.post(this.GLOBAL.BASE_URL + '/api/phoneCodeValidation', param).then((res) => {
           if (res.data.status == 500) {
-            // _this.getImgCode()
             _this.phoneMsg = res.data.message
           }
         })
       },
-      //验证图形验证码
-      // imgCodeVali(codes) {
-      // 	let _this = this
-      // 	_this.errorMsg = ''
-      // 	let sessionid = sessionStorage.getItem('sessionid')
-      // 	let param = {
-      // 		SessionId: sessionid,
-      // 		ImageCode: codes
-      // 	}
-      // 	_this.axios.post(this.GLOBAL.BASE_URL + '/api/imageCodeValidation', param).then((res) => {
-      // 		if(res.data.status == 500) {
-      // 			// _this.getImgCode()
-      // 			_this.errorMsg = res.data.message
-      // 		}
-      // 	})
-      // },
-
-      //图形验证码
-      // getImgCode() {
-      // 	let _this = this
-      // 	_this.errorMes=''
-      // 	let param = {
-      // 		SessionId: sessionStorage.getItem('sessionid')
-      // 	}
-      // 	_this.axios.post(this.GLOBAL.BASE_URL + '/api/imageCode', param).then((res) => {
-      // 		if(res.data.status == '200') {
-      // 			_this.codeImg = 'data:image/png;base64,' + res.data.data.imagedata
-      // 			let sessionid = res.data.data.sessionid
-      // 			sessionStorage.setItem('sessionid', sessionid)
-      // 			_this.imgcodeTxt = res.data.data.imagecode
-      // 		}
-      // 	})
-      // },
-
-      //注册获取手机验证码确定
-      // regSendCode(formName) {
-      // 	let _this = this
-      // 	_this.$refs[formName].validate((valid) => {
-      // 		if(valid) {
-      // 		} else {
-      // 			return false
-      // 		}
-      // 	})
-      // },
       // 忘记密码获取验证码
       getPhoneCodeForget() {
         let _this = this
@@ -720,11 +630,6 @@
         })
 
       },
-      //邮箱找回密码
-      // resetPwdEmail() {
-      // 	let _this = this
-      // 	_this.switchTab = 3
-      // },
       //切换首页
       checkIndex() {
         let _this = this
@@ -742,17 +647,6 @@
         _this.indexShow = false
         _this.LoginShow = 3
       },
-      //登录
-      // loginShow() {
-      // 	let _this = this
-      // 	_this.typeShow = true
-      // },
-      //使用邮箱找回密码
-      // useEmail() {
-      // 	let _this = this
-      // 	_this.active = 1
-      // 	_this.errorMsg = ''
-      // },
       //忘记密码
       forgetPwd() {
         let _this = this
@@ -795,10 +689,10 @@
         })
       },
       // 登录
-      loginIn(formName) {
+      loginIn() {
         let _this = this
         _this.fullscreenLoading = true
-        _this.$refs[formName].validate((valid) => {
+        _this.$refs.formLogin.validate((valid) => {
           if (valid) {
             let param = {
               Phone: _this.formLogin.PhoneNumber,
@@ -826,8 +720,7 @@
               _this.fullscreenLoading = false
               console.log(error)
             })
-          }
-          else {
+          } else {
             _this.fullscreenLoading = false
             return false
           }
@@ -870,7 +763,6 @@
       //忘记密码tab切换
       forgetClick(tab, event) {
         let _this = this
-        // _this.getImgCode()
         if (tab.index == '0') {
           _this.switchTab = 1
           _this.LoginShow = 2

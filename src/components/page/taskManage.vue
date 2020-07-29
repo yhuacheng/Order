@@ -85,16 +85,16 @@
     </div>
 
     <!--评价-->
-    <el-dialog title="评价" :visible.sync="assessModel" width="40%" center="" :close-on-click-modal="false">
+    <el-dialog title="确认评价" :visible.sync="assessModel" center :close-on-click-modal="false" width="30%">
       <el-form :model="assessForm">
-        <el-form-item label="评价链接">
+        <el-form-item label="评价链接：">
           <span>{{assessForm.productLink}}</span>
         </el-form-item>
-        <el-form-item label="评价截图">
-          <img v-show="assessForm.ProductImage!='' && assessForm.ProductImage!=null" @click="showBigImg" style="width: 150px;height: 150px;cursor: pointer;"
-            :src="assessForm.ProductImage" class="proImg" />
+        <el-form-item label="评价截图：">
+          <img v-if="assessForm.ProductImage" @click="showBigImg" style="width: 150px;height: 150px;cursor: pointer;"
+            :src="this.GLOBAL.IMG_URL+assessForm.ProductImage" class="proImg" />
         </el-form-item>
-        <el-form-item label="交易截图" v-if="serviceType=='评后返'">
+        <el-form-item label="交易截图：" v-if="serviceType=='评后返'">
           <el-upload :class="{hide:hideUpload}" :action="uploadUrl" name='image' list-type="picture-card" :on-success="handlePictureCardSuccess"
             :on-remove="handleRemove" :before-upload="beforeUpload" :on-change="handleChange">
             <i class="el-icon-plus"></i>
@@ -107,17 +107,17 @@
         <el-button @click="assessModel=false">取消</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="订单确认" :visible.sync="submitModal" :close-on-click-modal="false" center="" width="40%">
+    <el-dialog title="订单确认" :visible.sync="submitModal" :close-on-click-modal="false" center width="30%">
       <div>
-        <el-form :model="orderForm" label-width="80px">
-          <el-form-item label="任务状态">
+        <el-form :model="orderForm">
+          <el-form-item style="text-align: center;">
             <el-radio-group v-model="orderForm.orderStatus">
               <el-radio label="1">正常</el-radio>
               <el-radio label="0">异常</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="备注" v-show="orderForm.orderStatus=='0'">
-            <el-input type="textarea" v-model="orderForm.orderRemark"></el-input>
+            <el-input type="textarea" rows="3" v-model="orderForm.orderRemark"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -144,7 +144,7 @@
     <!--查看大图-->
     <el-dialog :title='titlePic' :visible.sync='imageModal' :close-on-click-modal='false'>
       <div class="txtCenter">
-        <img :src='assessForm.ProductImage' style="max-width: 80%;" />
+        <img :src='this.GLOBAL.IMG_URL+assessForm.ProductImage' style="max-width: 80%;" />
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="imageModal=false">关 闭</el-button>
@@ -488,7 +488,6 @@
         this.orderEndTime = value
       },
 
-
       // 填写评价
       evalEdit(index) {
         let _this = this
@@ -496,7 +495,7 @@
         _this.OrderId = _this.allOrderData[index].Id
         _this.serviceType = _this.allOrderData[index].ServiceType
         _this.assessForm.productLink = _this.allOrderData[index].ProductLink
-        _this.assessForm.ProductImage = this.GLOBAL.IMG_URL + _this.allOrderData[index].ProductImage
+        _this.assessForm.ProductImage = _this.allOrderData[index].ProductImage
       },
       //评论确定
       evalEditSubmit() {
