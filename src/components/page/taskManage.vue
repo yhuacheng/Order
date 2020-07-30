@@ -67,6 +67,7 @@
         <el-table-column prop="AmazonNumber" label="购买单号" align="center"></el-table-column>
         <el-table-column prop="AmazonProductPrice" label="购买价格" align="center"></el-table-column>
         <el-table-column prop="BuyTime" label="购买时间" align="center"></el-table-column>
+        <el-table-column prop="PayAccount" label="返款账号" align="center"></el-table-column>
         <el-table-column prop="state" label="状态" align="center" :formatter="txtOrderStatus"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -88,6 +89,9 @@
     <el-dialog title="确认评价" :visible.sync="assessModel" center :close-on-click-modal="false" :before-close="assessModelClose"
       width="30%">
       <el-form :model="assessForm">
+        <el-form-item label="返款账号：">
+          <span>{{assessForm.PPaccount}}</span>
+        </el-form-item>
         <el-form-item label="评价链接：">
           <span>{{assessForm.productLink}}</span>
         </el-form-item>
@@ -210,9 +214,9 @@
         },
         // 评价
         assessForm: {
+          PPaccount: '',
           productLink: '', //产品链接
-          ProductPictures: '', //评论图片
-          ProductImage: '' //产品图片
+          ProductPictures: '' //评论图片
         },
         imageUrl: '',
 
@@ -485,6 +489,7 @@
         _this.assessModel = true
         _this.OrderId = _this.allOrderData[index].Id
         _this.serviceType = _this.allOrderData[index].ServiceType
+        _this.assessForm.PPaccount = _this.allOrderData[index].PayAccount
         _this.assessForm.productLink = _this.allOrderData[index].ProductLink
         _this.assessForm.ProductImage = _this.allOrderData[index].ProductImage
       },
@@ -522,6 +527,7 @@
         _this.assessModel = false
         _this.OrderId = ''
         _this.serviceType = ''
+        _this.assessForm.PPaccount = ''
         _this.assessForm.productLink = ''
         _this.assessForm.ProductImage = ''
         _this.imageUrl = ''

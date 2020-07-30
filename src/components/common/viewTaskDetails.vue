@@ -131,7 +131,12 @@
       </div>
       <el-form :model='viewTaskData' ref='viewTaskData' label-width='150px'>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
+            <el-form-item label='返款账号：' prop="PayAccount">
+              <span>{{viewTaskData.PayAccount}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
             <el-form-item label='评价链接：' prop="ProductLink">
               <a :href="viewTaskData.ProductLink">{{viewTaskData.ProductLink}}</a>
             </el-form-item>

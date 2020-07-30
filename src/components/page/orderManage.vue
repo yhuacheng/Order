@@ -92,7 +92,7 @@
             <div class="mb20 fz16" style="border-bottom: 1px dashed #EEF1F6;padding-bottom: 15px;width: 90%;">产品信息</div>
             <el-col :span="12" :xs="24">
               <el-form-item label="下单类型" class="disInline minWid" prop="ServiceType">
-                <el-select v-model="taskForm.ServiceType" placeholder="请选择" class="disInline wid100" @change="checkOrderType">
+                <el-select v-model="taskForm.ServiceType" placeholder="请选择" class="disInline wid100">
                   <el-option v-for="(item,index) in orderTypes" :key='index' :value="item.value" :label="item.label"></el-option>
                 </el-select>
               </el-form-item>
@@ -195,7 +195,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24" :xs="24" class="mt30">
-              <div v-show="priceShow">
+              <div v-show="this.taskForm.ServiceType==1">
                 <span class="spanTxt">产品总价：</span>
                 <span class="colTxt labels fz20">￥{{productTotal}}</span>
                 <span class="labels col9">(产品总价) = {{taskForm.ProductPrice}} (产品价格) * {{taskForm.Number}} (数量) *</span>
@@ -210,7 +210,7 @@
               <div>
                 <span class="spanTxt">合计：</span>
                 <span class="colTxt labels fz20">￥{{allTotal}}</span>
-                <span class="labels col9">(合计) = <span v-show="priceShow">{{productTotal}} (产品总价) +</span>
+                <span class="labels col9">(合计) = <span v-show="this.taskForm.ServiceType==1">{{productTotal}} (产品总价) +</span>
                   {{serviceFeeTotal}}(服务费)</span>
               </div>
             </el-col>
@@ -822,18 +822,6 @@
 
         //留评比例
         _this.getCommentBL(row.CountryId)
-      },
-
-      // 下单类型选择
-      checkOrderType: function() {
-        let _this = this
-        let types = _this.taskForm.ServiceType
-        let nums = _this.taskForm.Number
-        if (types == '2') {
-          _this.priceShow = false
-        } else if (types == '1') {
-          _this.priceShow = true
-        }
       },
 
       // 留评比例
