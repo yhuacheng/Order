@@ -33,13 +33,13 @@
     </div>
     <div class="tabBox">
       <div class="tabList">
-        <ul class="tabBlock" v-for="(item,index) in allState" :key=index>
-          <li :class="active === '' ? 'active':''" data-index="0" @click="getAllStatus">全部<span>({{item.TotalCount}})</span></li>
-          <li :class="active === 1 ? 'active':''" data-index="1" @click="daiConfirm">待确认<span>({{item.TotalToBeParker}})</span></li>
-          <li :class="active === 2 ? 'active':''" data-index="2" @click="daifp">待分配<span>({{item.TotalToBeAllocated}})</span></li>
-          <li :class="active === 3 ? 'active':''" data-index="3" @click="yfp">已分配<span>({{item.TotalAlreadyAllocated}})</span></li>
-          <li :class="active === 4 ? 'active':''" data-index="4" @click="ywc">已完成<span>({{item.TotalCompleted}})</span></li>
-          <li :class="active === 5 ? 'active':''" data-index="5" @click="daiCancel">已取消<span>({{item.TotalCancel}})</span></li>
+        <ul class="tabBlock">
+          <li :class="active === '' ? 'active':''" data-index="0" @click="getAllStatus">全部<span>({{Number(TotalCount)}})</span></li>
+          <li :class="active === 1 ? 'active':''" data-index="1" @click="daiConfirm">待确认<span>({{Number(TotalToBeParker)}})</span></li>
+          <li :class="active === 2 ? 'active':''" data-index="2" @click="daifp">待分配<span>({{Number(TotalToBeAllocated)}})</span></li>
+          <li :class="active === 3 ? 'active':''" data-index="3" @click="yfp">已分配<span>({{Number(TotalAlreadyAllocated)}})</span></li>
+          <li :class="active === 4 ? 'active':''" data-index="4" @click="ywc">已完成<span>({{Number(TotalCompleted)}})</span></li>
+          <li :class="active === 5 ? 'active':''" data-index="5" @click="daiCancel">已取消<span>({{Number(TotalCancel)}})</span></li>
         </ul>
       </div>
       <div class="tabRight">
@@ -494,7 +494,12 @@
           }]
         },
         obj: [],
-        allState: [], //全部状态管理
+        TotalCount: 0,
+        TotalToBeParker: 0,
+        TotalToBeAllocated: 0,
+        TotalAlreadyAllocated: 0,
+        TotalCompleted: 0,
+        TotalCancel: 0,
         imageUrl: ''
       }
     },
@@ -583,7 +588,12 @@
           Id: sessionStorage.getItem('userId')
         }
         GetOrderState(param).then(res => {
-          _this.allState = res.data
+          _this.TotalCount = res.data[0].TotalCount
+          _this.TotalToBeParker = res.data[0].TotalToBeParker
+          _this.TotalToBeAllocated = res.data[0].TotalToBeAllocated
+          _this.TotalAlreadyAllocated = res.data[0].TotalAlreadyAllocated
+          _this.TotalCompleted = res.data[0].TotalCompleted
+          _this.TotalCancel = res.data[0].TotalCancel
         }).catch((e) => {})
       },
 
