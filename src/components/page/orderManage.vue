@@ -58,8 +58,8 @@
         <el-table-column prop="CountryName" label="国家" align="center"></el-table-column>
         <el-table-column prop="ServiceType" label="订单类型" align="center">
           <template slot-scope="scope">
-            <span v-if="scope.row.ServiceType==1">见单返</span>
-            <span v-if="scope.row.ServiceType==2">评后返</span>
+            <span v-if="scope.row.ServiceType==1">评后返（代返）</span>
+            <span v-if="scope.row.ServiceType==2">评后返（自返）</span>
           </template>
         </el-table-column>
         <el-table-column prop="Number" label="任务数量" align="center"></el-table-column>
@@ -380,10 +380,10 @@
         taskType: 'all',
         orderTypes: [{
           value: '1',
-          label: '见单返本'
+          label: '评后返（代返）'
         }, {
           value: '2',
-          label: '评后返'
+          label: '评后返（自返）'
         }],
         taskForm: {
           CountryId: '',

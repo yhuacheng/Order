@@ -13,8 +13,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label='下单类型：' prop="ServiceType">
-              <span v-if="viewOrderData.ServiceType==1">见单返</span>
-              <span v-if="viewOrderData.ServiceType==2">评后返</span>
+              <span v-if="viewOrderData.ServiceType==1">评后返（代返）</span>
+              <span v-if="viewOrderData.ServiceType==2">评后返（自返）</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">

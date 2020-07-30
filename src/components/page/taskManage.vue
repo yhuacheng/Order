@@ -85,7 +85,8 @@
     </div>
 
     <!--评价-->
-    <el-dialog title="确认评价" :visible.sync="assessModel" center :close-on-click-modal="false" width="30%">
+    <el-dialog title="确认评价" :visible.sync="assessModel" center :close-on-click-modal="false" :before-close="assessModelClose"
+      width="30%">
       <el-form :model="assessForm">
         <el-form-item label="评价链接：">
           <span>{{assessForm.productLink}}</span>
@@ -94,17 +95,19 @@
           <img v-if="assessForm.ProductImage" @click="showBigImg" style="width: 150px;height: 150px;cursor: pointer;"
             :src="this.GLOBAL.IMG_URL+assessForm.ProductImage" class="proImg" />
         </el-form-item>
-        <el-form-item label="交易截图：" v-if="serviceType=='评后返'">
-          <el-upload :class="{hide:hideUpload}" :action="uploadUrl" name='image' list-type="picture-card" :on-success="handlePictureCardSuccess"
-            :on-remove="handleRemove" :before-upload="beforeUpload" :on-change="handleChange">
-            <i class="el-icon-plus"></i>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg,图片大小不应超过5M</div>
+        <el-form-item label='交易截图：' v-if="serviceType=='评后返（自返）'" class="mt20 p-img">
+          <el-upload class="avatar-uploader" name="image" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess"
+            :on-error="handleError" :before-upload="beforeAvatarUpload" accept="image/jpeg,image/png,image/gif,image/bmp">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+          <el-input v-show="false" v-model='assessForm.ProductPictures'></el-input>
         </el-form-item>
+
       </el-form>
       <span slot='footer' class='dialog-footer'>
         <el-button type="primary" @click='evalEditSubmit'>确认</el-button>
-        <el-button @click="assessModel=false">取消</el-button>
+        <el-button @click="assessModelClose">取消</el-button>
       </span>
     </el-dialog>
     <el-dialog title="订单确认" :visible.sync="submitModal" :close-on-click-modal="false" center width="30%">
@@ -164,7 +167,6 @@
     taskCancel,
     Rate
   } from '@/request/api'
-  // const cityOptions = ['美国', '日本', '韩国', '加拿大'];
   export default {
     name: 'taskManage',
     data() {
@@ -212,6 +214,7 @@
           ProductPictures: '', //评论图片
           ProductImage: '' //产品图片
         },
+        imageUrl: '',
 
         obj: [],
         StatusSum: [], //任务状态数量
@@ -231,43 +234,31 @@
       this.getRateData() //获取汇率数据
     },
     methods: {
-      //上传图片前检验图片格式和大小
-      beforeUpload(file) {
-        let _this = this
-        _this.proImg = true
-        const isImg = file.type === 'image/jpg' || file.type == 'image/jpeg' || file.type == 'image/png' || file.type ==
-          'image/gif';
+      // 图片上传
+      handleAvatarSuccess(res, file) {
+        if (res.Data != '') {
+          this.assessForm.ProductPictures = res.Data
+        }
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.$message.success('交易截图上传成功！')
+      },
+      handleError(res) {
+        this.$message.error('交易截图上传失败！')
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isPNG = file.type === 'image/png';
+        const isGIF = file.type === 'image/gif';
+        const isBMP = file.type === 'image/bmp';
         const isLt5M = file.size / 1024 / 1024 < 5;
-        if (!isImg) {
-          this.$message.error('只能上传jpg/jpeg/png/gif的图片文件!');
+        if (!isJPG && !isPNG && !isGIF && !isBMP) {
+          this.$message.error('上传图片必须是JPG/PNG/GIF/BMP 格式!');
         } else if (!isLt5M) {
           this.$message.error('上传图片大小不能超过 5MB!');
         }
-        return isImg && isLt5M;
+        return (isJPG || isPNG || isGIF || isBMP) && isLt5M;
       },
-      // 上传图片change
-      handleChange(file, fileList) {
-        let _this = this
-        _this.hideUpload = fileList.length >= _this.limitCount;
-      },
-      // 上传产品图片
-      handleRemove(file, fileList) {
-        let _this = this
-        _this.assessForm.ProductPictures = ''
-        _this.hideUpload = fileList.length >= _this.limitCount;
-      },
-      handlePictureCardSuccess(res, file) {
-        let _this = this
-        _this.assessForm.ProductPictures = res.Data;
-        if (file.status == 'success') {
-          _this.$message({
-            type: 'success',
-            message: '上传成功'
-          });
-        } else {
-          _this.$message.error('上传失败')
-        }
-      },
+
       // 格式化状态
       txtOrderStatus(val) {
         if (val.state == 1) {
@@ -321,9 +312,9 @@
           for (let i = 0; i < lists.length; i++) {
             let types = lists[i].ServiceType
             if (types == 1) {
-              lists[i].ServiceType = '见单返本'
+              lists[i].ServiceType = '评后返（代返）'
             } else if (types == 2) {
-              lists[i].ServiceType = '评后返'
+              lists[i].ServiceType = '评后返（自返）'
             }
             _this.allOrderData[i].state = _this.allOrderData[i].TaskState
           }
@@ -511,7 +502,7 @@
               type: 'success',
               message: '操作成功'
             })
-            _this.assessModel = false
+            _this.assessModelClose()
             _this.getAllData()
             _this.getAllStatus()
           } else {
@@ -524,6 +515,18 @@
           console.log(error)
         })
       },
+
+      //确认评价窗口关闭
+      assessModelClose() {
+        let _this = this
+        _this.assessModel = false
+        _this.OrderId = ''
+        _this.serviceType = ''
+        _this.assessForm.productLink = ''
+        _this.assessForm.ProductImage = ''
+        _this.imageUrl = ''
+      },
+
       // 查看任务详情
       viewDetails(index, row) {
         let _this = this
@@ -675,9 +678,38 @@
   }
 </script>
 
-<style scoped>
-  /deep/.hide .el-upload--picture-card {
-    display: none;
+<style>
+  /* 上传组件相关样式 */
+  .p-img .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .p-img .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+
+  .p-img .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 150px;
+    height: 150px;
+    line-height: 150px !important;
+    text-align: center;
+  }
+
+  .p-img .avatar {
+    width: 150px;
+    height: 150px;
+    display: block;
+  }
+
+  .p-img .el-upload--text {
+    width: 150px;
+    height: 150px;
   }
 
   .fileBtn {

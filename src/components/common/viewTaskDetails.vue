@@ -43,7 +43,7 @@
                 text-color="#ff9900"></el-rate>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="viewTaskData.ServiceType === '评后返'">
+          <el-col :span="12" v-if="viewTaskData.ServiceType === '评后返（自返）'">
             <el-form-item label='预计价格：' prop="ProductPrice">
               <span v-show="viewTaskData.ProductPrice!=null"><span>{{viewTaskData.symbol}}</span>{{viewTaskData.ProductPrice}}</span>
             </el-form-item>
@@ -77,7 +77,7 @@
               <span>{{viewTaskData.AmazonNumber}}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="viewTaskData.ServiceType === '见单返本'">
+          <el-col :span="12" v-if="viewTaskData.ServiceType === '评后返（代返）'">
             <el-form-item label='产品金额：' prop="AmazonProductPrice">
               <span v-show="viewTaskData.AmazonProductPrice!=null"><span>{{viewTaskData.symbol}}</span>{{viewTaskData.AmazonProductPrice}}</span>
             </el-form-item>
