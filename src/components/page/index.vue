@@ -960,7 +960,7 @@
 
   .footer {
     margin-top: 50px;
-    padding: 80px 0;
+    padding: 20px 0;
     border-top: #e2e2e2 solid 1px;
     text-align: center;
   }

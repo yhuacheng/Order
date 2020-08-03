@@ -774,17 +774,6 @@
     transition: all ease-in-out .5s;
   }
 
-  .footer {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #eee;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-
   .detailbox1 li {
     width: 48%;
     float: left;
