@@ -89,7 +89,7 @@
       <el-row>
         <el-col :span="16" :xs="24" :sm="24" :md="24" :lg="16">
           <el-form :model="taskForm" ref="taskForm" :rules="taskRule" class="demo-ruleForm" status-icon>
-            <div class="mb20 fz16" style="border-bottom: 1px dashed #EEF1F6;padding-bottom: 15px;width: 90%;">产品信息</div>
+            <div class="mb20 fz16" style="width: 85%;padding: 15px 0;border-bottom:1px dashed #EEEEEE;">产品信息</div>
             <el-col :span="12" :xs="24">
               <el-form-item label="下单类型" class="disInline minWid" prop="ServiceType">
                 <el-select v-model="taskForm.ServiceType" placeholder="请选择" class="disInline wid100">
@@ -115,20 +115,20 @@
                 <el-input v-model="taskForm.Asin" maxlength="10" show-word-limit placeholder="长度为10的数字和字母组合"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12" :xs="24">
-              <el-form-item label="产品名称" class="disInline minWid" prop="ProductName">
-                <el-input v-model="taskForm.ProductName" type='textarea' placeholder="请输入产品名称"></el-input>
+            <el-col :span="24" :xs="24">
+              <el-form-item label="产品名称" style="width: 85%;" prop="ProductName">
+                <el-input v-model="taskForm.ProductName" maxlength="500" show-word-limit placeholder="请输入产品名称"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12" :xs="24">
-              <el-form-item label="产品链接" class="wid">
-                <el-input type="textarea" v-model="taskForm.ProductLink" placeholder="请以http://或者https://开头"></el-input>
+            <el-col :span="24" :xs="24">
+              <el-form-item label="产品链接" style="width: 85%;">
+                <el-input v-model="taskForm.ProductLink" maxlength="500" show-word-limit placeholder="请以http://或者https://开头"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12" :xs="24">
               <p class="lh40">产品评分</p>
               <el-form-item>
-                <el-rate v-model="taskForm.ProductScore"></el-rate>
+                <el-rate v-model="taskForm.ProductScore" style="width: 66%;border: 1px solid #DCDFE6;padding: 8px;border-radius: 4px;position: relative;top: -3px;"></el-rate>
               </el-form-item>
             </el-col>
             <el-col :span="12" :xs="24">
@@ -149,7 +149,7 @@
               </el-form-item>
             </el-col>
             <p style="clear: both;"></p>
-            <div class="mb20 fz16 mt20" style="border-bottom: 1px dashed #EEF1F6;padding-bottom: 15px;width: 90%;">下单信息</div>
+            <div class="mb20 fz16 mt10" style="width: 85%;padding: 15px 0;border-bottom:1px dashed #EEEEEE;">下单信息</div>
             <el-col :span="12" :xs="24">
               <el-form-item label="关键词类型" class="disInline minWid" prop='KeywordType'>
                 <el-radio-group v-model="taskForm.KeywordType">
@@ -158,9 +158,9 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="12" :xs="24">
-              <el-form-item label="关键词" class="disInline minWid" prop="ProductKeyword">
-                <el-input v-model="taskForm.ProductKeyword" placeholder='请输入关键词'></el-input>
+            <el-col :span="24" :xs="24">
+              <el-form-item label="关键词" style="width: 85%;" prop="ProductKeyword">
+                <el-input v-model="taskForm.ProductKeyword" :rows="5" maxlength="500" show-word-limit placeholder='请输入关键词'></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12" :xs="24">
@@ -190,8 +190,8 @@
               </el-form-item>
             </el-col>
             <el-col :span='24' :xs="24">
-              <el-form-item label='备注' prop='Remarks' style="width: 90%;">
-                <el-input type='textarea' :autosize="{ minRows: 3, maxRows: 6}" v-model='taskForm.Remarks'></el-input>
+              <el-form-item label='备注' prop='Remarks' style="width: 85%;">
+                <el-input type='textarea' :autosize="{ minRows: 5, maxRows: 8}" v-model='taskForm.Remarks'></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24" :xs="24" class="mt30">
@@ -237,7 +237,7 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitPay('taskForm')">确定</el-button>
+        <el-button type="primary" @click="submitPay('taskForm')" :loading="btnLoading">确定</el-button>
         <el-button @click="closeModel">返回</el-button>
       </span>
     </el-dialog>
@@ -313,6 +313,7 @@
       return {
         viewData: [],
         loading: true, //列表加载
+        btnLoading: false,
         hideUpload: false,
         limitCount: 1,
         paymentCode: [], //充值二维码
@@ -880,6 +881,8 @@
         let errorMes = _this.errorMes
         _this.$refs[formName].validate((valid) => {
           if (valid && !errorMes) {
+            _this.btnLoading = true
+
             let param = Object.assign({}, _this.taskForm)
             param.UserId = sessionStorage.getItem('userId')
 
@@ -897,6 +900,7 @@
             }
 
             addOrder(param).then((res) => {
+              _this.btnLoading = false
               if (res.data.Code == 'ok') {
                 _this.OrderId = res.data.OrderId
                 _this.paymentModel = true
@@ -912,7 +916,9 @@
                   type: 'error'
                 })
               }
-            }).catch((err) => {})
+            }).catch((err) => {
+              _this.btnLoading = false
+            })
           }
         })
       },
