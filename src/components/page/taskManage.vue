@@ -113,23 +113,21 @@
         <el-button @click="assessModelClose">取消</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="订单确认" :visible.sync="submitModal" :close-on-click-modal="false" center width="30%">
-      <div>
-        <el-form :model="orderForm" :rules="orderOkRules">
-          <el-form-item style="text-align: center;">
-            <el-radio-group v-model="orderForm.orderStatus">
-              <el-radio label="1">正常</el-radio>
-              <el-radio label="0">异常</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="备注" v-if="orderForm.orderStatus=='0'" prop="orderRemark">
-            <el-input type="textarea" rows="3" v-model="orderForm.orderRemark"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
+    <el-dialog title="订单确认" :visible.sync="submitModal" :close-on-click-modal="false" center width="30%" :before-close="closeSubmit">
+      <el-form :model="orderForm" :rules="orderOkRules" ref="orderForm">
+        <el-form-item style="text-align: center;">
+          <el-radio-group v-model="orderForm.orderStatus">
+            <el-radio label="1">正常</el-radio>
+            <el-radio label="0">异常</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="备注" v-if="orderForm.orderStatus=='0'" prop="orderRemark">
+          <el-input type="textarea" rows="3" v-model="orderForm.orderRemark"></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" size="medium" @click='confirmSubmit'>确定</el-button>
-        <el-button @click="submitModal=false" size="medium">取消</el-button>
+        <el-button @click="closeSubmit" size="medium">取消</el-button>
       </span>
     </el-dialog>
     <!--取消-->
@@ -228,7 +226,7 @@
           orderRemark: [{
             required: true,
             message: '请输入备注信息',
-            trigger: 'change'
+            trigger: 'blur'
           }]
         }
       }
@@ -388,36 +386,45 @@
       //订单确认完成确定
       confirmSubmit() {
         let _this = this
-        _this.$refs[orderForm].validate((valid) => {
-          let userId = sessionStorage.getItem('userId')
-          let param = {
-            State: parseInt(_this.orderForm.orderStatus),
-            Id: _this.OrderId,
-            UserId: userId,
-            Remark: _this.orderForm.orderRemark
+        _this.$refs.orderForm.validate((valid) => {
+          if (valid) {
+            let userId = sessionStorage.getItem('userId')
+            let param = {
+              State: parseInt(_this.orderForm.orderStatus),
+              Id: _this.OrderId,
+              UserId: userId,
+              Remark: _this.orderForm.orderRemark
+            }
+            taskConfirm(param).then(res => {
+              if (res.data.Code == 'ok') {
+                _this.$message({
+                  type: 'success',
+                  message: res.data.Msg
+                })
+              } else {
+                _this.$message({
+                  type: 'error',
+                  message: res.data.Msg
+                })
+              }
+              _this.closeSubmit()
+              _this.getAllData()
+              _this.getAllStatus()
+            }).catch(error => {})
           }
-          taskConfirm(param).then(res => {
-            if (res.data.Code == 'ok') {
-              _this.$message({
-                type: 'success',
-                message: res.data.Msg
-              })
-            } else {
-              _this.$message({
-                type: 'error',
-                message: res.data.Msg
-              })
-            }
-            _this.submitModal = false
-            _this.orderForm = {
-              orderStatus: '1',
-              orderRemark: ''
-            }
-            _this.getAllData()
-            _this.getAllStatus()
-          }).catch(error => {})
         })
       },
+
+      //关闭订单确认
+      closeSubmit() {
+        let _this = this
+        _this.submitModal = false
+        _this.orderForm = {
+          orderStatus: '1',
+          orderRemark: ''
+        }
+      },
+
       // 重置
       resetTask() {
         let _this = this
