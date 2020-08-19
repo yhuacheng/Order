@@ -107,7 +107,6 @@
           </el-upload>
           <el-input v-show="false" v-model='assessForm.ProductPictures'></el-input>
         </el-form-item>
-
       </el-form>
       <span slot='footer' class='dialog-footer'>
         <el-button type="primary" @click='evalEditSubmit'>确认</el-button>
@@ -116,14 +115,14 @@
     </el-dialog>
     <el-dialog title="订单确认" :visible.sync="submitModal" :close-on-click-modal="false" center width="30%">
       <div>
-        <el-form :model="orderForm">
+        <el-form :model="orderForm" :rules="orderOkRules">
           <el-form-item style="text-align: center;">
             <el-radio-group v-model="orderForm.orderStatus">
               <el-radio label="1">正常</el-radio>
               <el-radio label="0">异常</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="备注" v-show="orderForm.orderStatus=='0'">
+          <el-form-item label="备注" v-if="orderForm.orderStatus=='0'" prop="orderRemark">
             <el-input type="textarea" rows="3" v-model="orderForm.orderRemark"></el-input>
           </el-form-item>
         </el-form>
@@ -219,13 +218,19 @@
           ProductPictures: '' //评论图片
         },
         imageUrl: '',
-
         obj: [],
         StatusSum: [], //任务状态数量
         statusList: [], //全部状态
         rateData: [], // 费率
         imageModal: false, //大图弹框
         titlePic: '', //大图标题
+        orderOkRules: {
+          orderRemark: [{
+            required: true,
+            message: '请输入备注信息',
+            trigger: 'change'
+          }]
+        }
       }
     },
     components: {
@@ -383,34 +388,34 @@
       //订单确认完成确定
       confirmSubmit() {
         let _this = this
-        let userId = sessionStorage.getItem('userId')
-        let param = {
-          State: parseInt(_this.orderForm.orderStatus),
-          Id: _this.OrderId,
-          UserId: userId,
-          Remark: _this.orderForm.orderRemark
-        }
-        taskConfirm(param).then(res => {
-          if (res.data.Code == 'ok') {
-            _this.$message({
-              type: 'success',
-              message: res.data.Msg
-            })
-          } else {
-            _this.$message({
-              type: 'error',
-              message: res.data.Msg
-            })
+        _this.$refs[orderForm].validate((valid) => {
+          let userId = sessionStorage.getItem('userId')
+          let param = {
+            State: parseInt(_this.orderForm.orderStatus),
+            Id: _this.OrderId,
+            UserId: userId,
+            Remark: _this.orderForm.orderRemark
           }
-          _this.submitModal = false
-          _this.orderForm = {
-            orderStatus: '1',
-            orderRemark: ''
-          }
-          _this.getAllData()
-          _this.getAllStatus()
-        }).catch(error => {
-          console.log(error)
+          taskConfirm(param).then(res => {
+            if (res.data.Code == 'ok') {
+              _this.$message({
+                type: 'success',
+                message: res.data.Msg
+              })
+            } else {
+              _this.$message({
+                type: 'error',
+                message: res.data.Msg
+              })
+            }
+            _this.submitModal = false
+            _this.orderForm = {
+              orderStatus: '1',
+              orderRemark: ''
+            }
+            _this.getAllData()
+            _this.getAllStatus()
+          }).catch(error => {})
         })
       },
       // 重置

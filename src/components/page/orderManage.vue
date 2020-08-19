@@ -50,25 +50,28 @@
     <div class="mt10 tableBg" style="overflow-x: auto">
       <el-table :data="allOrderData" id="exportTable" v-loading="loading" element-loading-text="拼命加载中" border style="width: 100%;font-size: 15px;"
         :header-cell-style="{background:'#eef1f6'}">
-        <el-table-column prop="Id" label="订单编码" align="center" width="170">
+        <el-table-column prop="Id" label="订单编码" align="center" width="140">
           <template slot-scope="scope">
             <el-button type="text" @click="viewDetails(scope.$index,scope.row)">{{scope.row.OrderNumber}}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="CountryName" label="国家" align="center"></el-table-column>
-        <el-table-column prop="ServiceType" label="订单类型" align="center">
+        <el-table-column prop="ServiceType" label="订单类型" align="center" width="130">
           <template slot-scope="scope">
             <span v-if="scope.row.ServiceType==1">评后返（代返）</span>
             <span v-if="scope.row.ServiceType==2">评后返（自返）</span>
           </template>
         </el-table-column>
-        <el-table-column prop="Number" label="任务数量" align="center"></el-table-column>
-        <el-table-column prop="ShopName" label="店铺名称" align="center" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="ProductName" label="产品名称" align="center" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="Asin" label="产品ASIN" align="center"></el-table-column>
-        <el-table-column prop="ProductKeyword" label="关键词" align="center"></el-table-column>
+        <el-table-column prop="Number" label="任务数" align="center"></el-table-column>
+        <el-table-column prop="ShopName" label="店铺" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="ProductName" label="产品名称" align="center" width="120" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="Asin" label="产品ASIN" align="center" width="130"></el-table-column>
+        <el-table-column prop="ProductKeyword" label="关键词" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="AddedFee" label="增值费" align="center"></el-table-column>
+        <el-table-column prop="UnitPriceSerCharge" label="服务费单价" align="center" width="110"></el-table-column>
+        <el-table-column prop="ExchangeRate" label="汇率" align="center"></el-table-column>
         <el-table-column prop="Total" label="总价(¥)" align="center"></el-table-column>
-        <el-table-column prop="OrderTime" label="下单时间" align="center"></el-table-column>
+        <el-table-column prop="OrderTime" label="下单时间" align="center" width="170"></el-table-column>
         <el-table-column prop="state" label="状态" align="center" :formatter="txtOrderStatus"></el-table-column>
         <el-table-column label="操作" align="center" width="185">
           <template slot-scope="scope">
