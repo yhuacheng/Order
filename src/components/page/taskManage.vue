@@ -23,14 +23,14 @@
           </el-col>
         </el-row>
         <div>
-          <el-form-item label="关键字" class="labelNum">
-            <el-input v-model="searchForm.Keyword" style="width: 220px" placeholder="任务编码,产品名称"></el-input>
+          <el-form-item label="搜索内容" class="labelNum">
+            <el-input v-model="searchForm.Keyword" style="width: 220px" placeholder="任务编码，产品名称"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click='searchOrder' size="medium">搜索</el-button>
             <el-button @click="resetTask" size="medium">重置</el-button>
-            <!-- <el-button type="warning" size="medium" @click="exportExcel">导出</el-button> -->
           </el-form-item>
+          <el-button type="warning" size="medium" @click="exportExcel" style="float: right;">导出任务</el-button>
         </div>
       </el-form>
     </div>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="mt10 tableBg" style="overflow-x: auto">
-      <el-table :data="allOrderData" v-loading="loading" element-loading-text="拼命加载中" border style="width: 100%;font-size: 15px;"
+      <el-table :data="allOrderData" id="exportTable" v-loading="loading" element-loading-text="拼命加载中" border style="width: 100%;font-size: 15px;"
         :header-cell-style="{background:'#eef1f6'}">
         <el-table-column prop="OrderNumbers" label="任务编码" align="center" width="170">
           <template slot-scope="scope">
@@ -158,8 +158,8 @@
 </template>
 <script>
   import viewTask from '../common/viewTaskDetails'
-  // import FileSaver from 'file-saver'
-  // import XLSX from 'xlsx'
+  import FileSaver from 'file-saver'
+  import XLSX from 'xlsx'
   import {
     getCountry,
     taskList,
@@ -691,7 +691,31 @@
         let _this = this
         _this.titlePic = '评价截图'
         _this.imageModal = true
+      },
+
+      // 导出
+      exportExcel() {
+        var xlsxParam = {
+          raw: true
+        }
+        var wb = XLSX.utils.table_to_book(document.querySelector('#exportTable'), xlsxParam)
+        var wbout = XLSX.write(wb, {
+          bookType: 'xlsx',
+          bookSST: true,
+          type: 'array'
+        })
+        try {
+          FileSaver.saveAs(new Blob([wbout], {
+            type: 'application/octet-stream'
+          }), '任务数据.xlsx')
+        } catch (e) {
+          if (typeof console !== 'undefined') {
+            console.log(e, wbout)
+          }
+        }
+        return wbout
       }
+
     }
   }
 </script>
