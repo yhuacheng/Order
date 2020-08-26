@@ -1476,7 +1476,7 @@ footer {
 
 @media screen and (max-width: 1920px) {
 	.main {
-		max-width: 1500px;
+		max-width: 95%;
 	}
 	.navHead {
 		max-width: 1560px;

@@ -56,9 +56,7 @@
       <div slot="header" class="clearfix">
         <span>公告</span>
       </div>
-      <div class="text item" v-html='Notice'>
-        <p>{{Notice}}</p>
-      </div>
+      <div class="notice" v-html='Notice'></div>
     </el-card>
     <!--提示-->
     <div class="errTip">
@@ -307,5 +305,9 @@
   .carItem:nth-child(4),
   .carItem:nth-child(5) {
     border-right: none;
+  }
+
+  .notice{
+    line-height: 2;
   }
 </style>

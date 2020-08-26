@@ -13,16 +13,14 @@
           </el-checkbox-group>
         </el-form-item>
         <div class="form-item">
+          <el-form-item label="搜索内容" class="labelNum">
+            <el-input v-model="searchForm.Keyword" style="width: 220px" placeholder="单号,产品名称,ASIN,关键词"></el-input>
+          </el-form-item>
           <el-form-item label="下单时间">
             <el-date-picker v-model="searchForm.orderStartTime" type="date" placeholder="选择开始时间" :picker-options="pickerStartDate"
               value-format="yyyy-MM-dd" class="mb10"></el-date-picker>
             <el-date-picker v-model="searchForm.orderEndTime" type="date" placeholder="选择结束时间" :picker-options="pickerEndDate"
               value-format="yyyy-MM-dd"></el-date-picker>
-          </el-form-item>
-        </div>
-        <div>
-          <el-form-item label="搜索内容" class="labelNum">
-            <el-input v-model="searchForm.Keyword" style="width: 220px" placeholder="单号,产品名称,ASIN,关键词"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click='searchOrder' size="medium">搜索</el-button>
@@ -186,7 +184,7 @@
               </el-form-item>
             </el-col>
             <el-col :span='12' :xs="24">
-              <el-form-item label="任务结束时间" class="disInline minWid" prop="EndTime">
+              <el-form-item label="任务结束时间" class="disInline minWid">
                 <el-date-picker v-model="taskForm.EndTime" value-format="yyyy-MM-dd" style="display: inline-block;width: 100%;"
                   type="date" placeholder="选择日期" :picker-options="taskEndDate">
                 </el-date-picker>
@@ -592,12 +590,14 @@
           Id: sessionStorage.getItem('userId')
         }
         GetOrderState(param).then(res => {
-          _this.TotalCount = res.data[0].TotalCount
-          _this.TotalToBeParker = res.data[0].TotalToBeParker
-          _this.TotalToBeAllocated = res.data[0].TotalToBeAllocated
-          _this.TotalAlreadyAllocated = res.data[0].TotalAlreadyAllocated
-          _this.TotalCompleted = res.data[0].TotalCompleted
-          _this.TotalCancel = res.data[0].TotalCancel
+          if (res.data != '0' && res.data != '' && res.data != null) {
+            _this.TotalCount = res.data[0].TotalCount
+            _this.TotalToBeParker = res.data[0].TotalToBeParker
+            _this.TotalToBeAllocated = res.data[0].TotalToBeAllocated
+            _this.TotalAlreadyAllocated = res.data[0].TotalAlreadyAllocated
+            _this.TotalCompleted = res.data[0].TotalCompleted
+            _this.TotalCancel = res.data[0].TotalCancel
+          }
         }).catch((e) => {})
       },
 
