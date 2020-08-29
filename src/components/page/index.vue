@@ -2,143 +2,109 @@
   <div>
     <div v-show="!indexShow">
       <div class="loginBox">
-        <div class="navCon">
-          <div class="navHead">
-            <div class="navImg login">
-              <div class="imgBox" @click='checkIndex'>
-                <img src="../../assets/image/logo.png" class="img-log" />
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="loginMain">
-          <div>
-            <el-row :gurre='20'>
-              <el-col :span='12' :xs='24'>
-                <div>
-                  <img src="../../assets/image/log-in.png" alt="" style="width: 80%;" />
-                </div>
-              </el-col>
-              <el-col :span='12' :xs='24' style='margin-top: 50px;'>
-                <el-tabs v-model="forgetType" class='ml50' v-show='LoginShow==1' @tab-click="forgetClick">
-                  <el-tab-pane label="登录" name="first">
+          <el-tabs v-model="forgetType" class='ml50' v-show='LoginShow==1' @tab-click="forgetClick">
+            <el-tab-pane label="登录" name="first">
+            </el-tab-pane>
+            <el-tab-pane label="找回密码" name="second">
+              <div>
+                <el-button size='small' class="activeThis">通过手机找回</el-button>
+              </div>
+              <el-form :model="forgetPhone" ref="forgetPhone" :rules='rules' status-icon v-show='switchTab ==1' class="mt20">
+                <el-form-item class="disInline wid100" label='手机号' prop='PhoneNumber'>
+                  <el-input placeholder="请输入手机号" v-model="forgetPhone.PhoneNumber">
+                  </el-input>
+                </el-form-item>
+                <el-form-item label='验证码' prop='VerificationCode'>
+                  <el-input placeholder="请输入验证码" v-model="forgetPhone.VerificationCode">
+                  </el-input>
+                  <el-button v-if="!forgetPhone.PhoneNumber" type='primary' class='mt10' size='medium' disabled>
+                    <span v-show="show">获取验证码</span>
+                  </el-button>
+                  <el-button v-else type='primary' class='mt10' size='medium' :disabled='getPhonePwd' @click='getPhoneCodeForget'>
+                    <span v-show="show">获取验证码</span>
+                    <span v-show='!show'>{{count}}秒</span>
+                  </el-button>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type='primary' class='confirmLogin' @click="RetrievePwdPhone('forgetPhone')">确定</el-button>
+                </el-form-item>
+              </el-form>
+              <el-form :model='resetPwdForm' ref='resetPwdForm' :rules="rules" status-icon v-show='switchTab==2'>
+                <el-form-item prop="newPwd" label='新密码'>
+                  <el-input v-model="resetPwdForm.newPwd" maxlength='16' type="password" autocomplete="off" placeholder='请输入新密码'>
 
-                  </el-tab-pane>
-                  <el-tab-pane label="找回密码" name="second">
-                    <div>
-                      <!-- <el-button :class="active === 1?'activeThis':''" size='small' @click="useEmail">通过邮箱找回</el-button> -->
-                      <el-button size='small' class="activeThis">通过手机找回</el-button>
-                    </div>
-                    <el-form :model="forgetPhone" ref="forgetPhone" :rules='rules' status-icon v-show='switchTab ==1'
-                      class="mt20">
-                      <el-form-item class="disInline wid100" label='手机号' prop='PhoneNumber'>
-                        <el-input placeholder="请输入手机号" v-model="forgetPhone.PhoneNumber">
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label='验证码' prop='VerificationCode'>
-                        <el-input placeholder="请输入验证码" v-model="forgetPhone.VerificationCode">
-                        </el-input>
-                        <el-button v-if="!forgetPhone.PhoneNumber" type='primary' class='mt10' size='medium' disabled>
-                          <span v-show="show">获取验证码</span>
-                        </el-button>
-                        <el-button v-else type='primary' class='mt10' size='medium' :disabled='getPhonePwd' @click='getPhoneCodeForget'>
-                          <span v-show="show">获取验证码</span>
-                          <span v-show='!show'>{{count}}秒</span>
-                        </el-button>
-                      </el-form-item>
-                      <el-form-item>
-                        <el-button type='primary' class='confirmLogin' @click="RetrievePwdPhone('forgetPhone')">确定</el-button>
-                      </el-form-item>
-                    </el-form>
-                    <el-form :model='resetPwdForm' ref='resetPwdForm' :rules="rules" status-icon v-show='switchTab==2'>
-                      <el-form-item prop="newPwd" label='新密码'>
-                        <el-input v-model="resetPwdForm.newPwd" maxlength='16' type="password" autocomplete="off"
-                          placeholder='请输入新密码'>
+                  </el-input>
+                  <span class="tipTxt">6-16位英文字母和数字组成</span>
+                </el-form-item>
+                <el-form-item prop="comfirPwd" label='确认密码'>
+                  <el-input v-model="resetPwdForm.comfirPwd" maxlength='16' type="password" autocomplete="off"
+                    placeholder='请再次输入新密码'>
+                  </el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type='primary' class='confirmLogin' @click="comfirPwdBtn('resetPwdForm')">确定</el-button>
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
+          </el-tabs>
+          <el-form :model="formLogin" ref="formLogin" :rules='rules' class="demo-ruleForm" status-icon v-show='LoginShow==2'>
+            <div class="txtCenter fz30">登录</div>
+            <el-form-item prop='' label='手机'>
+              <el-input placeholder="请输入手机号" v-model="formLogin.PhoneNumber">
+              </el-input>
+            </el-form-item>
+            <el-form-item prop='' label='密码'>
+              <el-input type='password' v-model="formLogin.passwords" placeholder='请输入密码'></el-input>
+            </el-form-item>
+            <el-form-item class="mt20">
+              <el-button type="primary" v-loading.fullscreen.lock="fullscreenLoading" @click="loginIn" class='confirmLogin'>立即登录</el-button>
+              <div class="flexBox">
+                <span class="forgetTxt" @click="register">立即注册</span>
+                <span class="forgetTxt2" @click="forgetPwd">忘记密码</span>
+              </div>
+            </el-form-item>
+          </el-form>
+          <el-form :model="formReg" ref="formReg" :rules="rules" class="demo-ruleForm demo-dynamic" status-icon v-show='LoginShow==3'>
+            <div class="txtCenter fz30">注册</div>
+            <el-form-item prop="PhoneNumber" label='手机号'>
+              <el-input v-model="formReg.PhoneNumber" placeholder='请输入手机号'>
+              </el-input>
+            </el-form-item>
+            <el-form-item label='验证码'>
+              <el-input v-model="formReg.VerificationCode" placeholder='请输入验证码'>
 
-                        </el-input>
-                        <span class="tipTxt">6-16位英文字母和数字组成</span>
-                      </el-form-item>
-                      <el-form-item prop="comfirPwd" label='确认密码'>
-                        <el-input v-model="resetPwdForm.comfirPwd" maxlength='16' type="password" autocomplete="off"
-                          placeholder='请再次输入新密码'>
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item>
-                        <el-button type='primary' class='confirmLogin' @click="comfirPwdBtn('resetPwdForm')">确定</el-button>
-                      </el-form-item>
-                    </el-form>
-                  </el-tab-pane>
-                </el-tabs>
-                <el-form :model="formLogin" ref="formLogin" :rules='rules' class="demo-ruleForm" status-icon v-show='LoginShow==2'>
-                  <div class="txtCenter fz30">登录</div>
-                  <el-form-item prop='' label='手机'>
-                    <el-input placeholder="请输入手机号" v-model="formLogin.PhoneNumber">
-                    </el-input>
-                  </el-form-item>
-                  <el-form-item prop='' label='密码'>
-                    <el-input type='password' v-model="formLogin.passwords" placeholder='请输入密码'></el-input>
-                  </el-form-item>
-                  <el-form-item class="mt20">
-                    <el-button type="primary" v-loading.fullscreen.lock="fullscreenLoading" @click="loginIn" class='confirmLogin'>立即登录</el-button>
-                    <div class="flexBox">
-                      <span class="forgetTxt" @click="register">立即注册</span>
-                      <span class="forgetTxt2" @click="forgetPwd">忘记密码</span>
-                    </div>
-                  </el-form-item>
-                </el-form>
-                <el-form :model="formReg" ref="formReg" :rules="rules" class="demo-ruleForm demo-dynamic" status-icon
-                  v-show='LoginShow==3'>
-                  <div class="txtCenter fz30">注册</div>
-                  <el-form-item prop="PhoneNumber" label='手机号'>
-                    <el-input v-model="formReg.PhoneNumber" placeholder='请输入手机号'>
-                    </el-input>
-                  </el-form-item>
-                  <el-form-item label='验证码'>
-                    <el-input v-model="formReg.VerificationCode" placeholder='请输入验证码'>
+              </el-input>
+              <el-button v-if="!formReg.PhoneNumber" type="primary" size="medium" class='mt10' @click='getPhoneCode'
+                disabled>
+                <span v-show="show">获取验证码</span>
+              </el-button>
+              <el-button v-else type="primary" size="medium" class='mt10' @click='getPhoneCode' :disabled='codedisabled'>
+                <span v-show="show">获取验证码</span>
+                <span v-show='!show'>{{count}}秒</span>
+              </el-button>
+            </el-form-item>
+            <el-form-item prop="passwords" label='密码'>
+              <el-input v-model="formReg.passwords" type='password' placeholder='请输入密码'></el-input>
+              <span class="tipTxt">6-16位英文字母和数字组成</span>
+            </el-form-item>
+            <el-form-item prop="confirmPassWord" label='确认密码'>
+              <el-input v-model="formReg.confirmPassWord" type='password' placeholder='请确认密码'>
 
-                    </el-input>
-                    <el-button v-if="!formReg.PhoneNumber" type="primary" size="medium" class='mt10' @click='getPhoneCode'
-                      disabled>
-                      <span v-show="show">获取验证码</span>
-                      <!-- <span v-show='!show'>{{count}}秒</span> -->
-                    </el-button>
-                    <el-button v-else type="primary" size="medium" class='mt10' @click='getPhoneCode' :disabled='codedisabled'>
-                      <span v-show="show">获取验证码</span>
-                      <span v-show='!show'>{{count}}秒</span>
-                    </el-button>
-                  </el-form-item>
-                  <el-form-item prop="passwords" label='密码'>
-                    <el-input v-model="formReg.passwords" type='password' placeholder='请输入密码'>
-
-                    </el-input>
-                    <span class="tipTxt">6-16位英文字母和数字组成</span>
-                  </el-form-item>
-                  <el-form-item prop="confirmPassWord" label='确认密码'>
-                    <el-input v-model="formReg.confirmPassWord" type='password' placeholder='请确认密码'>
-
-                    </el-input>
-                  </el-form-item>
-                  <el-form-item label='推荐码'>
-                    <el-input v-model="formReg.RecommendCode" placeholder='请输入推荐码'>
-
-                    </el-input>
-                  </el-form-item>
-                  <!-- 			<el-form-item>
-										<el-checkbox-group v-model="formReg.agreeService">
-											<el-checkbox label="同意服务条款" class='col9' name="type"></el-checkbox>
-										</el-checkbox-group>
-									</el-form-item> -->
-                  <el-form-item>
-                    <el-button type="primary" @click="submitRegister('formReg')" class='confirmLogin'>立即注册</el-button>
-                  </el-form-item>
-                  <p>已有账号 <span class="forgetTxt" @click='loginBtn'>登录</span></p>
-                </el-form>
-              </el-col>
-            </el-row>
-          </div>
+              </el-input>
+            </el-form-item>
+            <el-form-item label='推荐码'>
+              <el-input v-model="formReg.RecommendCode" placeholder='请输入推荐码'>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitRegister('formReg')" class='confirmLogin'>立即注册</el-button>
+            </el-form-item>
+            <p>已有账号 <span class="forgetTxt" @click='loginBtn'>登录</span></p>
+          </el-form>
         </div>
         <div class="footer">
-          <div>2020 © 版权所有</div>
+          <div>2020 © AMZBUY 版权所有</div>
         </div>
       </div>
     </div>
@@ -250,8 +216,7 @@
           <p class="fz20 col mb20">加入我们，为您节省99%的研发投入</p>
           <el-button type='warning' class='contactBtn' @click='register'>立即加入</el-button>
         </div>
-        <!--<p class="footerTit fz20 col">加入我们，为您节省99%的研发投入</p>-->
-        <p class="txtCenter footerTxt">Copyright ©2020 Buy System</p>
+        <p class="txtCenter footerTxt">Copyright ©2020 By System</p>
       </footer>
     </div>
   </div>
@@ -841,9 +806,7 @@
   .flexItem {
     display: flex;
     align-items: center;
-    /*justify-content: center;*/
     background: #f2f2f2;
-    /*padding: 50px 0;*/
     height: 192px;
     padding: 0 15px
   }
@@ -948,21 +911,32 @@
 
   .loginBox {
     width: 100%;
-    height: 100%;
-    background: #f2f2f2;
+    height: 100vh;
+    background: linear-gradient(to bottom, #d3959b, #bfe6ba);
   }
 
   .loginMain {
-    background: #fff;
-    padding: 30px;
-    margin: 60px auto;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 20px 50px 20px 0;
+    width: 520px;
+    border-radius: 10px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: -30px;
   }
 
   .footer {
-    margin-top: 50px;
-    padding: 20px 0;
     border-top: #e2e2e2 solid 1px;
     text-align: center;
+    position: fixed;
+    bottom: 0;
+    height: 60px;
+    line-height: 60px;
+    width: 100%;
+    color: #999999;
+    font-size: 14px;
   }
 
   .forgetTxt,
@@ -988,9 +962,5 @@
 
   .bgCol {
     background: #4f4e4c;
-  }
-
-  footer {
-    width: 100%;
   }
 </style>

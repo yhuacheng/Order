@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 70%;margin: 0 auto;">
     <div class="userBox mb20">
       <div class="panLeft">
         <img src="../../assets/image/headImg.jpg" class="headImg" />
@@ -307,7 +307,7 @@
     border-right: none;
   }
 
-  .notice{
+  .notice {
     line-height: 2;
   }
 </style>

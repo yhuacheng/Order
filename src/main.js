@@ -11,6 +11,8 @@ import ElementUI from 'element-ui'
 import VueResource from 'vue-resource'
 import 'default-passive-events'
 import global_ from '@/components/global'
+import './assets/css/color-dark.css'
+import './assets/css/main.css'
 import './assets/css/mystyle.css'
 import vali from '@/components/common/validate'
 import axios from '@/request/https'
@@ -24,10 +26,12 @@ Vue.prototype.GLOBAL = global_
 router.beforeEach((to, from, next) => {
   const role = sessionStorage.getItem('userId')
   if (!role && to.path !== '/index') {
-   next({
-        path: '/index',
-        params: {indexShow:true}
-      })
+    next({
+      path: '/index',
+      params: {
+        indexShow: true
+      }
+    })
   } else {
     // 简单的判断IE10及以下不进入富文本编辑器，该组件不兼容
     if (navigator.userAgent.indexOf('MSIE') > -1 && to.path === '/editor') {

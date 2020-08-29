@@ -15,7 +15,6 @@
           <el-col :xs="24" :span='24'>
             <el-form-item label="国家">
               <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-              <div style="margin: 15px 0;"></div>
               <el-checkbox-group v-model="searchForm.checkedCities" @change="handleCheckedCitiesChange">
                 <el-checkbox v-for="(item,index) in cities" :label="item.Id" :key="index">{{item.CountryName}}</el-checkbox>
               </el-checkbox-group>
@@ -72,8 +71,9 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="small" v-if="scope.row.state==1" type="danger" @click="cancelHandel(scope.$index,scope.row)">取消</el-button>
-            <el-button size="small" v-if="scope.row.state==5" type="success" @click="evalEdit(scope.$index,scope.row)">确认评价</el-button>
-            <el-button size="small" type="primary" v-if="scope.row.state==3" @click="confirmBtn(scope.$index,scope.row)">订单确认</el-button>
+            <el-button size="small" type="primary" v-if="scope.row.state==3" @click="confirmBtn(scope.$index,scope.row)">确认订单</el-button>
+            <el-button size="small" v-if="scope.row.state==5" type="success" @click="evalEdit(scope.$index,scope.row,1)">确认评价</el-button>
+            <el-button size="small" v-if="scope.row.state==6 && scope.row.ServiceType=='评后返（自返）'" type="success" @click="evalEdit(scope.$index,scope.row,2)">补充返款信息</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -86,9 +86,9 @@
     </div>
 
     <!--评价-->
-    <el-dialog title="确认评价" :visible.sync="assessModel" center :close-on-click-modal="false" :before-close="assessModelClose"
+    <el-dialog :title="commentTitle" :visible.sync="assessModel" center :close-on-click-modal="false" :before-close="assessModelClose"
       width="30%">
-      <el-form :model="assessForm">
+      <el-form :model="assessForm" :rules="assessFormRules" label-width="100px" ref="assessForm">
         <el-form-item label="返款账号：">
           <span>{{assessForm.PPaccount}}</span>
         </el-form-item>
@@ -96,46 +96,71 @@
           <span>{{assessForm.productLink}}</span>
         </el-form-item>
         <el-form-item label="评价截图：">
-          <img v-if="assessForm.ProductImage" @click="showBigImg" style="width: 150px;height: 150px;cursor: pointer;"
+          <img v-if="assessForm.ProductImage" @click="showBigImg(GLOBAL.IMG_URL+assessForm.ProductImage)" style="width: 150px;height: 150px;cursor: pointer;"
             :src="this.GLOBAL.IMG_URL+assessForm.ProductImage" class="proImg" />
         </el-form-item>
-        <el-form-item label='交易截图：' v-if="serviceType=='评后返（自返）'" class="mt20 p-img">
-          <el-upload class="avatar-uploader" name="image" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess"
-            :on-error="handleError" :before-upload="beforeAvatarUpload" accept="image/jpeg,image/png,image/gif,image/bmp">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-          <el-input v-show="false" v-model='assessForm.ProductPictures'></el-input>
-        </el-form-item>
+        <div v-if="serviceType=='评后返（自返）'">
+          <el-form-item label='交易截图：' class="mt20 p-img">
+            <el-upload class="avatar-uploader" name="image" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess"
+              :on-error="handleError" :before-upload="beforeAvatarUpload" accept="image/jpeg,image/png,image/gif,image/bmp">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+            <el-input v-show="false" v-model='assessForm.ProductPictures'></el-input>
+          </el-form-item>
+          <!-- 编号小于100018是公司内人 -->
+          <el-form-item label="返款金额：" prop="backMoney" v-if="loginUserId<=100018">
+            <el-input v-model="assessForm.backMoney"></el-input>
+          </el-form-item>
+        </div>
       </el-form>
       <span slot='footer' class='dialog-footer'>
         <el-button type="primary" @click='evalEditSubmit'>确认</el-button>
-        <el-button @click="assessModelClose">取消</el-button>
+        <el-button @click="assessModelClose">关闭</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="订单确认" :visible.sync="submitModal" :close-on-click-modal="false" center width="30%" :before-close="closeSubmit">
-      <el-form :model="orderForm" :rules="orderOkRules" ref="orderForm">
-        <el-form-item style="text-align: center;">
-          <el-radio-group v-model="orderForm.orderStatus">
+
+    <!-- 确认订单 -->
+    <el-dialog title="确认订单" :visible.sync="submitModal" :close-on-click-modal="false" center :before-close="closeSubmit">
+      <el-form :model="orderForm" :rules="orderOkRules" ref="orderForm" style="padding: 0 30px;">
+        <el-form-item label="订单状态：">
+          <el-radio-group v-model="orderForm.orderStatus" @change="orderStateChange">
             <el-radio label="1">正常</el-radio>
             <el-radio label="0">异常</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" v-if="orderForm.orderStatus=='0'" prop="orderRemark">
+        <el-form-item label="购买截图：">
+          <img v-if="orderForm.buyImage" @click="showBigImg(GLOBAL.IMG_URL+orderForm.buyImage)" style="width: 150px;height: 150px;cursor: pointer;"
+            :src="this.GLOBAL.IMG_URL+orderForm.buyImage" class="proImg" />
+        </el-form-item>
+        <el-form-item label="购买单号：">
+          <span>{{orderForm.buyNumber}}</span>
+        </el-form-item>
+        <el-form-item label="购买时间：">
+          <span>{{orderForm.buyTime}}</span>
+        </el-form-item>
+        <el-form-item label="购买价格：" prop="buyMoney">
+          <el-input v-model="orderForm.buyMoney" :disabled="orderForm.orderStatus=='0'"></el-input>
+        </el-form-item>
+        <el-form-item label="备注：" prop="remark" v-if="orderForm.orderStatus=='1'">
+          <el-input type="textarea" rows="3" v-model="orderForm.remark"></el-input>
+        </el-form-item>
+        <el-form-item label="异常备注：" prop="orderRemark" v-if="orderForm.orderStatus=='0'">
           <el-input type="textarea" rows="3" v-model="orderForm.orderRemark"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" size="medium" @click='confirmSubmit'>确定</el-button>
-        <el-button @click="closeSubmit" size="medium">取消</el-button>
+        <el-button @click="closeSubmit" size="medium">关闭</el-button>
       </span>
     </el-dialog>
+
     <!--取消-->
     <el-dialog title="取消订单" :visible.sync="cancelModal" :close-on-click-modal="false" center width="30%">
       <div class="del-dialog-cnt">是否确定取消该任务?</div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click='cancelSubmit'>确定</el-button>
-        <el-button @click="cancelModal=false">取消</el-button>
+        <el-button @click="cancelModal=false">关闭</el-button>
       </span>
     </el-dialog>
     <!--FBA查看详情-->
@@ -148,7 +173,7 @@
     <!--查看大图-->
     <el-dialog :title='titlePic' :visible.sync='imageModal' :close-on-click-modal='false'>
       <div class="txtCenter">
-        <img :src='this.GLOBAL.IMG_URL+assessForm.ProductImage' style="max-width: 80%;" />
+        <img :src='this.bigImgUrl' style="max-width: 80%;" />
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="imageModal=false">关 闭</el-button>
@@ -178,7 +203,12 @@
         limitCount: 1, //图片数量
         orderForm: {
           orderStatus: '1', //确认订单状态
-          orderRemark: '', //确认订单备注
+          buyImage: '',
+          buyNumber: '',
+          buyTime: '',
+          buyMoney: '',
+          remark: '', //正常备注
+          orderRemark: '', //异常备注
         },
         checkAll: false,
         cities: [],
@@ -213,7 +243,8 @@
         assessForm: {
           PPaccount: '',
           productLink: '', //产品链接
-          ProductPictures: '' //评论图片
+          ProductPictures: '', //交易截图
+          backMoney: '' //返款金额
         },
         imageUrl: '',
         obj: [],
@@ -223,12 +254,33 @@
         imageModal: false, //大图弹框
         titlePic: '', //大图标题
         orderOkRules: {
+          buyMoney: [{
+              required: true,
+              message: '请输入购买金额',
+              trigger: 'blur'
+            },
+            {
+              pattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
+              message: '金额式不正确',
+              trigger: 'blur'
+            }
+          ],
           orderRemark: [{
             required: true,
-            message: '请输入备注信息',
+            message: '请输入异常备注',
             trigger: 'blur'
           }]
-        }
+        },
+        bigImgUrl: '',
+        loginUserId: '',
+        assessFormRules: {
+          backMoney: [{
+            pattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
+            message: '金额式不正确',
+            trigger: 'blur'
+          }]
+        },
+        commentTitle: ''
       }
     },
     components: {
@@ -303,6 +355,7 @@
       getAllData() {
         let _this = this
         let userId = sessionStorage.getItem('userId')
+        _this.loginUserId = userId
         let param = {
           pageNum: _this.currentPage,
           pagesize: _this.pageSize,
@@ -340,8 +393,9 @@
       // 国家全选
       handleCheckAllChange(val) {
         let _this = this
-        let citys = _this.cities
-        _this.searchForm.checkedCities = val ? citys : [];
+        val ? (_this.searchForm.checkedCities = _this.cities.map((res) => {
+          return res.Id
+        })) : (_this.searchForm.checkedCities = [], _this.isIndeterminate = false);
         _this.isIndeterminate = false;
       },
       // 国家选择
@@ -378,10 +432,14 @@
         })
       },
       //订单确认完成弹窗
-      confirmBtn(index) {
+      confirmBtn(index, row) {
         let _this = this
         _this.submitModal = true
-        _this.OrderId = _this.allOrderData[index].Id
+        _this.OrderId = row.Id
+        _this.orderForm.buyImage = row.BuyImage
+        _this.orderForm.buyNumber = row.AmazonNumber
+        _this.orderForm.buyTime = row.BuyTime
+        _this.orderForm.buyMoney = row.AmazonProductPrice
       },
       //订单确认完成确定
       confirmSubmit() {
@@ -389,11 +447,20 @@
         _this.$refs.orderForm.validate((valid) => {
           if (valid) {
             let userId = sessionStorage.getItem('userId')
+            let state = _this.orderForm.orderStatus
+            let remark = ''
+            if (state == '1') {
+              remark = _this.orderForm.remark
+            }
+            if (state == '0') {
+              remark = _this.orderForm.orderRemark
+            }
             let param = {
-              State: parseInt(_this.orderForm.orderStatus),
               Id: _this.OrderId,
               UserId: userId,
-              Remark: _this.orderForm.orderRemark
+              State: Number(state),
+              Remark: remark,
+              AmazonProductPrice: _this.orderForm.buyMoney
             }
             taskConfirm(param).then(res => {
               if (res.data.Code == 'ok') {
@@ -419,10 +486,22 @@
       closeSubmit() {
         let _this = this
         _this.submitModal = false
+        _this.$refs['orderForm'].resetFields()
         _this.orderForm = {
           orderStatus: '1',
-          orderRemark: ''
+          remark: '',
+          orderRemark: '',
+          buyImage: '',
+          buyNumber: '',
+          buyTime: '',
+          buyMoney: '',
         }
+      },
+
+      //切换订单确认状态
+      orderStateChange() {
+        let _this = this
+        _this.$refs['orderForm'].resetFields()
       },
 
       // 重置
@@ -496,40 +575,56 @@
       },
 
       // 填写评价
-      evalEdit(index) {
+      evalEdit(index, row, val) {
         let _this = this
+        if (val == '1') {
+          _this.commentTitle = '确认评价'
+        }
+        if (val == '2') {
+          _this.commentTitle = '补充返款信息'
+        }
         _this.assessModel = true
-        _this.OrderId = _this.allOrderData[index].Id
-        _this.serviceType = _this.allOrderData[index].ServiceType
-        _this.assessForm.PPaccount = _this.allOrderData[index].PayAccount
-        _this.assessForm.productLink = _this.allOrderData[index].ProductLink
-        _this.assessForm.ProductImage = _this.allOrderData[index].ProductImage
+        _this.OrderId = row.Id
+        _this.serviceType = row.ServiceType
+        _this.assessForm.PPaccount = row.PayAccount
+        _this.assessForm.productLink = row.ProductLink
+        _this.assessForm.ProductImage = row.ProductImage
+        _this.assessForm.backMoney = row.DealMoeny
+        _this.assessForm.ProductPictures = row.DealIamge
+        _this.imageUrl = row.DealIamge
       },
       //评论确定
       evalEditSubmit() {
         let _this = this
-        let param = {
-          UserId: sessionStorage.getItem('userId'),
-          Id: _this.OrderId,
-          UserImage: _this.assessForm.ProductPictures
-        }
-        taskCancel(param).then(res => {
-          if (res.data.Code == 'ok') {
-            _this.$message({
-              type: 'success',
-              message: '操作成功'
-            })
-            _this.assessModelClose()
-            _this.getAllData()
-            _this.getAllStatus()
-          } else {
-            _this.$message({
-              type: 'error',
-              message: res.data.Msg
-            })
+        _this.$refs.assessForm.validate((valid) => {
+          if (valid) {
+            let money = _this.assessForm.backMoney
+            if (!money) {
+              money = 0
+            }
+            let param = {
+              UserId: sessionStorage.getItem('userId'),
+              Id: _this.OrderId,
+              UserImage: _this.assessForm.ProductPictures,
+              BackMoney: money
+            }
+            taskCancel(param).then(res => {
+              if (res.data.Code == 'ok') {
+                _this.$message({
+                  type: 'success',
+                  message: '操作成功'
+                })
+                _this.assessModelClose()
+                _this.getAllData()
+                _this.getAllStatus()
+              } else {
+                _this.$message({
+                  type: 'error',
+                  message: res.data.Msg
+                })
+              }
+            }).catch(error => {})
           }
-        }).catch(error => {
-          console.log(error)
         })
       },
 
@@ -542,6 +637,8 @@
         _this.assessForm.PPaccount = ''
         _this.assessForm.productLink = ''
         _this.assessForm.ProductImage = ''
+        _this.assessForm.ProductPictures = ''
+        _this.assessForm.backMoney = 0
         _this.imageUrl = ''
       },
 
@@ -686,11 +783,12 @@
         _this.getAllData()
       },
 
-      //展示评价大图
-      showBigImg() {
+      //展示大图
+      showBigImg(url) {
         let _this = this
-        _this.titlePic = '评价截图'
+        _this.titlePic = '查看大图'
         _this.imageModal = true
+        _this.bigImgUrl = url
       },
 
       // 导出

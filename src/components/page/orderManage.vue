@@ -7,7 +7,6 @@
       <el-form :model="searchForm" ref="searchForm" class="form-item" label-width="80px" :inline="true">
         <el-form-item label="国家">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-          <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="searchForm.checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="(item,index) in cities" :label="item.Id" :key="index">{{item.CountryName}}</el-checkbox>
           </el-checkbox-group>
@@ -409,90 +408,82 @@
           Asin: [{
               required: true,
               message: '请输入产品ASIN',
-              trigger: 'change'
+              trigger: 'blur'
             },
             {
               validator: vali.flagNum,
-              trigger: 'change'
+              trigger: 'blur'
             }
           ],
           CountryId: [{
             required: true,
             message: '请选择国家',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           ServiceType: [{
             required: true,
             message: '请选择下单类型',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           ShopName: [{
             required: true,
             message: '请输入店铺名称',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           ProductPictures: [{
             required: true,
             message: '请选择产品图片',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           StartTime: [{
             required: true,
             message: '请选择任务开始时间',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           EndTime: [{
             required: true,
             message: '请选择任务结束时间',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           ProductName: [{
             required: true,
             message: '请输入产品名称',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           ProductPrice: [{
               required: true,
               message: '请输入产品价格',
-              trigger: 'change'
+              trigger: 'blur'
             },
             {
               validator: vali.proPrice,
-              trigger: 'change'
+              trigger: 'blur'
             }
           ],
           Number: [{
               required: true,
               message: '请输入购买数量',
-              trigger: 'change'
+              trigger: 'blur'
             },
             {
               validator: vali.checkNum,
-              trigger: 'change'
+              trigger: 'blur'
             }
           ],
-          VideoNum: [{
-            validator: vali.checkNum,
-            trigger: 'change'
-          }],
-          PicNum: [{
-            validator: vali.checkNum,
-            trigger: 'change'
-          }],
-          tradingFlow: [{
-            required: true,
-            message: '请输入交易流水',
-            trigger: 'change'
-          }],
           PayAccount: [{
             required: true,
             message: '请输入付款账号',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           ProductPosition: [{
             required: true,
             message: '请选择留评比例',
-            trigger: 'change'
+            trigger: 'blur'
+          }],
+          ProductKeyword: [{
+            required: true,
+            message: '请输入关键词',
+            trigger: 'blur'
           }]
         },
         obj: [],
@@ -639,11 +630,12 @@
         return (isJPG || isPNG || isGIF || isBMP) && isLt5M;
       },
 
-      // 全选
+      // 国家全选
       handleCheckAllChange(val) {
         let _this = this
-        let cities = _this.cities
-        _this.searchForm.checkedCities = val ? cities : [];
+        val ? (_this.searchForm.checkedCities = _this.cities.map((res) => {
+          return res.Id
+        })) : (_this.searchForm.checkedCities = [], _this.isIndeterminate = false);
         _this.isIndeterminate = false;
       },
       // 选择国家
@@ -881,49 +873,57 @@
       // 创建任务提交订单到支付
       submitPay(formName) {
         let _this = this
-        let errorMes = _this.errorMes
-        _this.$refs[formName].validate((valid) => {
-          if (valid && !errorMes) {
-            _this.btnLoading = true
+        let tokenId = sessionStorage.getItem('userId')
+        if (tokenId) {
+          let errorMes = _this.errorMes
+          _this.$refs[formName].validate((valid) => {
+            if (valid && !errorMes) {
+              _this.btnLoading = true
 
-            let param = Object.assign({}, _this.taskForm)
-            param.UserId = sessionStorage.getItem('userId')
+              let param = Object.assign({}, _this.taskForm)
+              param.UserId = sessionStorage.getItem('userId')
 
-            param.TotalProductPrice = _this.productTotal //产品总价
-            param.ServiceCharge = _this.serviceFeeTotal //服务费
-            param.Total = _this.allTotal //合计
+              param.TotalProductPrice = _this.productTotal //产品总价
+              param.ServiceCharge = _this.serviceFeeTotal //服务费
+              param.Total = _this.allTotal //合计
 
-            param.AddedFee = _this.addService //增值费
-            param.UnitPriceSerCharge = _this.serviceUnit //服务费单价
-            param.ExchangeRate = _this.ExRate //汇率
+              param.AddedFee = _this.addService //增值费
+              param.UnitPriceSerCharge = _this.serviceUnit //服务费单价
+              param.ExchangeRate = _this.ExRate //汇率
 
-            if (_this.taskForm.ServiceType == '2') {
-              param.TotalProductPrice = 0 //产品总价
-              param.ExchangeRate = 0 //汇率
-            }
-
-            addOrder(param).then((res) => {
-              _this.btnLoading = false
-              if (res.data.Code == 'ok') {
-                _this.OrderId = res.data.OrderId
-                _this.paymentModel = true
-                _this.paymentForm.payMoney = _this.allTotal
-                _this.$refs['taskForm'].resetFields()
-                _this.closeModel()
-                _this.payMent()
-                _this.allOrderList()
-                _this.allOrderStatus()
-              } else {
-                _this.$message({
-                  message: res.data.Msg,
-                  type: 'error'
-                })
+              if (_this.taskForm.ServiceType == '2') {
+                param.TotalProductPrice = 0 //产品总价
+                param.ExchangeRate = 0 //汇率
               }
-            }).catch((err) => {
-              _this.btnLoading = false
-            })
-          }
-        })
+
+              addOrder(param).then((res) => {
+                _this.btnLoading = false
+                if (res.data.Code == 'ok') {
+                  _this.OrderId = res.data.OrderId
+                  _this.paymentModel = true
+                  _this.paymentForm.payMoney = _this.allTotal
+                  _this.$refs['taskForm'].resetFields()
+                  _this.closeModel()
+                  _this.payMent()
+                  _this.allOrderList()
+                  _this.allOrderStatus()
+                } else {
+                  _this.$message({
+                    message: res.data.Msg,
+                    type: 'error'
+                  })
+                }
+              }).catch((err) => {
+                _this.btnLoading = false
+              })
+            }
+          })
+        } else {
+          _this.$message({
+            message: '登录信息失效，请刷新页面后重试！',
+            type: 'error'
+          })
+        }
       },
       // 打开取消弹窗
       cancelHandel(index, row) {
