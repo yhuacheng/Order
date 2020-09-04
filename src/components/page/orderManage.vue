@@ -13,7 +13,7 @@
         </el-form-item>
         <div class="form-item">
           <el-form-item label="搜索内容" class="labelNum">
-            <el-input v-model="searchForm.Keyword" style="width: 220px" placeholder="单号,产品名称,ASIN,关键词"></el-input>
+            <el-input v-model="searchForm.Keyword" style="width: 250px" placeholder="订单号 / 产品名称 / ASIN / 关键词"></el-input>
           </el-form-item>
           <el-form-item label="下单时间">
             <el-date-picker v-model="searchForm.orderStartTime" type="date" placeholder="选择开始时间" :picker-options="pickerStartDate"
@@ -49,7 +49,7 @@
         :header-cell-style="{background:'#eef1f6'}">
         <el-table-column prop="Id" label="订单编码" align="center" width="140">
           <template slot-scope="scope">
-            <el-button type="text" @click="viewDetails(scope.$index,scope.row)">{{scope.row.OrderNumber}}</el-button>
+            <el-link type="primary" :underline="false" @click="viewDetails(scope.$index,scope.row)">{{scope.row.OrderNumber}}</el-link>
           </template>
         </el-table-column>
         <el-table-column prop="CountryName" label="国家" align="center"></el-table-column>
@@ -583,16 +583,20 @@
       allOrderStatus() {
         let _this = this
         let param = {
-          Id: sessionStorage.getItem('userId')
+          Id: sessionStorage.getItem('userId'),
+          countryIdx: _this.searchForm.checkedCities,
+          statetime: _this.searchForm.orderStartTime,
+          endtime: _this.searchForm.orderEndTime,
+          kWord: _this.searchForm.Keyword
         }
         GetOrderState(param).then(res => {
           if (res.data != '0' && res.data != '' && res.data != null) {
-            _this.TotalCount = res.data[0].TotalCount
-            _this.TotalToBeParker = res.data[0].TotalToBeParker
-            _this.TotalToBeAllocated = res.data[0].TotalToBeAllocated
-            _this.TotalAlreadyAllocated = res.data[0].TotalAlreadyAllocated
-            _this.TotalCompleted = res.data[0].TotalCompleted
-            _this.TotalCancel = res.data[0].TotalCancel
+            _this.TotalCount = Number(res.data[0].TotalCount)
+            _this.TotalToBeParker = Number(res.data[0].TotalToBeParker)
+            _this.TotalToBeAllocated = Number(res.data[0].TotalToBeAllocated)
+            _this.TotalAlreadyAllocated = Number(res.data[0].TotalAlreadyAllocated)
+            _this.TotalCompleted = Number(res.data[0].TotalCompleted)
+            _this.TotalCancel = Number(res.data[0].TotalCancel)
           }
         }).catch((e) => {})
       },
@@ -1128,6 +1132,7 @@
         let _this = this
         _this.currentPage = 1
         _this.allOrderList()
+        _this.allOrderStatus()
       },
 
       // 重置
@@ -1140,7 +1145,9 @@
           orderEndTime: '',
           checkedCities: []
         }
+        _this.currentPage = 1
         _this.allOrderList()
+        _this.allOrderStatus()
       },
 
       // 导出

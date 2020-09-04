@@ -23,7 +23,7 @@
         </el-row>
         <div>
           <el-form-item label="搜索内容" class="labelNum">
-            <el-input v-model="searchForm.Keyword" style="width: 220px" placeholder="任务编码，产品名称"></el-input>
+            <el-input v-model="searchForm.Keyword" style="width: 250px" placeholder="任务编码 / 产品名称 / 购买单号"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click='searchOrder' size="medium">搜索</el-button>
@@ -36,15 +36,15 @@
     <div>
       <div class="tabList">
         <ul class="tabBlock" v-for="(item,index) in statusList" :key=index>
-          <li :class="active === 0 ? 'active':''" @click="allTaskNum" :data-index="0">全部<span>({{item.TotalCount}})</span></li>
-          <li :class="active === 1 ? 'active':''" :data-index="1" @click="daifp">待分配<span>({{item.OrderStateInOne}})</span></li>
-          <li :class="active === 2 ? 'active':''" :data-index="2" @click="daiBuy">待购买<span>({{item.OrderStateInTwo}})</span></li>
-          <li :class="active === 3 ? 'active':''" :data-index="3" @click="daiComfir">订单待确认<span>({{item.OrderStateInThree}})</span></li>
-          <li :class="active === 4 ? 'active':''" :data-index="4" @click="daipj">待评价<span>({{item.OrderStateInFour}})</span></li>
-          <li :class="active === 5 ? 'active':''" :data-index="5" @click="evaluationComfir">评价待确认<span>({{item.OrderStateInFive}})</span></li>
-          <li :class="active === 6 ? 'active':''" :data-index="6" @click="ywc">已完成<span>({{item.OrderStateInSix}})</span></li>
-          <li :class="active === 7 ? 'active':''" :data-index="7" @click="taskCancel">已取消<span>({{item.OrderStateInSeven}})</span></li>
-          <li :class="active === 8 ? 'active':''" :data-index="8" @click="errTask">异常<span>({{item.OrderStateInEight}})</span></li>
+          <li :class="active === 0 ? 'active':''" @click="allTaskNum" :data-index="0">全部<span>({{Number(item.TotalCount)}})</span></li>
+          <li :class="active === 1 ? 'active':''" :data-index="1" @click="daifp">待分配<span>({{Number(item.OrderStateInOne)}})</span></li>
+          <li :class="active === 2 ? 'active':''" :data-index="2" @click="daiBuy">待购买<span>({{Number(item.OrderStateInTwo)}})</span></li>
+          <li :class="active === 3 ? 'active':''" :data-index="3" @click="daiComfir">订单待确认<span>({{Number(item.OrderStateInThree)}})</span></li>
+          <li :class="active === 4 ? 'active':''" :data-index="4" @click="daipj">待评价<span>({{Number(item.OrderStateInFour)}})</span></li>
+          <li :class="active === 5 ? 'active':''" :data-index="5" @click="evaluationComfir">评价待确认<span>({{Number(item.OrderStateInFive)}})</span></li>
+          <li :class="active === 6 ? 'active':''" :data-index="6" @click="ywc">已完成<span>({{Number(item.OrderStateInSix)}})</span></li>
+          <li :class="active === 7 ? 'active':''" :data-index="7" @click="taskCancel">已取消<span>({{Number(item.OrderStateInSeven)}})</span></li>
+          <li :class="active === 8 ? 'active':''" :data-index="8" @click="errTask">异常<span>({{Number(item.OrderStateInEight)}})</span></li>
         </ul>
       </div>
     </div>
@@ -53,7 +53,7 @@
         :header-cell-style="{background:'#eef1f6'}">
         <el-table-column prop="OrderNumbers" label="任务编码" align="center" width="170">
           <template slot-scope="scope">
-            <el-button type="text" @click="viewDetails(scope.$index,scope.row)">{{scope.row.OrderNumbers}}</el-button>
+            <el-link type="primary" :underline="false" @click="viewDetails(scope.$index,scope.row)">{{scope.row.OrderNumbers}}</el-link>
             <p>
               <span v-if="scope.row.NoComment==1"><span style="color: #F56C6C;font-size: 10px;">免评单</span></span>
             </p>
@@ -171,9 +171,9 @@
       </span>
     </el-dialog>
     <!--查看大图-->
-    <el-dialog :title='titlePic' :visible.sync='imageModal' :close-on-click-modal='false'>
+    <el-dialog :title='titlePic' :visible.sync='imageModal' :close-on-click-modal='false' width="98%">
       <div class="txtCenter">
-        <img :src='this.bigImgUrl' style="max-width: 80%;" />
+        <img :src='this.bigImgUrl' style="width: 100%;" />
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="imageModal=false">关 闭</el-button>
@@ -345,7 +345,7 @@
         let param = {
           userId: userId,
           countryIdx: _this.searchForm.checkedCities,
-          keyWord: _this.searchForm.Keyword
+          kWord: _this.searchForm.Keyword
         }
         taskStatus(param).then(res => {
           _this.statusList = res.data.list
@@ -513,7 +513,9 @@
           orderEndTime: '',
           checkedCities: []
         }
+        _this.currentPage = 1
         _this.getAllData()
+        _this.getAllStatus()
       },
 
       // 取消
@@ -706,6 +708,7 @@
       searchOrder() {
         let _this = this
         _this.getAllData()
+        _this.getAllStatus()
       },
       //上传图片选择
       openFile() {

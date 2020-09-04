@@ -1,4 +1,8 @@
-import {get,post,getAction} from './https'
+import {
+  get,
+  post,
+  getAction
+} from './https'
 
 export const login = (params) => post('/api/Login/UserLogin', params) //登录
 export const register = (params) => post('/api/CustomerUser/AddUser', params) //注册
@@ -24,7 +28,7 @@ export const Income = (params) => getAction('/api/CustomerFinance/GetPayStateOne
 export const Expenditure = (params) => getAction('/api/CustomerFinance/GetPayExpenditure', params) //余额支出
 export const cashWithList = (params) => getAction('/api/DrawMoney/GetUserWithdrawal', params) //提现列表
 export const cashWith = (params) => post('/api/DrawMoney/UserWithdrawal', params) //提现
-export const uploadImg = (params,config) => post('/api/Order/GetProductPictures', params,config) //图片上传
+export const uploadImg = (params, config) => post('/api/Order/GetProductPictures', params, config) //图片上传
 export const getCountry = (params) => getAction('/api/Country/GetCountry', params) //国家
 export const Rate = (params) => getAction('/api/Rate/GetRate', params) //汇率
 export const getServiceFee = (params) => getAction('/api/IncrementServiceFee/IncrementServiceFee', params) //增值费
