@@ -121,7 +121,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24" :xs="24">
-              <el-form-item label="产品链接" style="width: 85%;">
+              <el-form-item label="产品链接" style="width: 85%;" prop="ProductLink">
                 <el-input v-model="taskForm.ProductLink" maxlength="500" show-word-limit placeholder="请以http://或者https://开头"></el-input>
               </el-form-item>
             </el-col>
@@ -449,6 +449,11 @@
             required: true,
             message: '请输入产品名称',
             trigger: 'blur'
+          }],
+          ProductLink: [{
+            pattern: /(http|https):\/\/([\w.]+\/?)\S*/,
+            message: '请输入以http:// 或 https://开头的正确产品链接',
+            trigger: ['blur']
           }],
           ProductPrice: [{
               required: true,
