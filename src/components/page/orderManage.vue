@@ -45,8 +45,7 @@
       </div>
     </div>
     <div class="mt10 tableBg" style="overflow-x: auto">
-      <el-table :data="allOrderData" id="exportTable" v-loading="loading" element-loading-text="拼命加载中" border style="width: 100%;font-size: 15px;"
-        :header-cell-style="{background:'#eef1f6'}">
+      <el-table :data="allOrderData" id="exportTable" border style="width: 100%;font-size: 15px;" :header-cell-style="{background:'#eef1f6'}">
         <el-table-column prop="Id" label="订单编码" align="center" width="140">
           <template slot-scope="scope">
             <el-link type="primary" :underline="false" @click="viewDetails(scope.$index,scope.row)">{{scope.row.OrderNumber}}</el-link>

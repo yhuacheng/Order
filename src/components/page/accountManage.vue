@@ -22,7 +22,7 @@
           	</div> -->
         <div class="mt20">最近交易</div>
       </div>
-      <el-table :data="allBalanceData" v-loading="loading" element-loading-text="拼命加载中" border style="width: 100%;" :header-cell-style="{background:'#eef1f6'}">
+      <el-table :data="allBalanceData" border style="width: 100%;" :header-cell-style="{background:'#eef1f6'}">
         <el-table-column prop="BusinessNumber" label="业务编号" align="center" width='200px'></el-table-column>
         <el-table-column prop="TransactionAmount" label="交易金额" align="center"></el-table-column>
         <el-table-column prop="TransactionType" label="交易类型" align="center" :formatter="typeTxt"></el-table-column>
@@ -50,7 +50,7 @@
           <el-form-item label="业务编号">
             <el-input v-model="searchForm.dealId" placeholder="请输入业务编号" class="mb10" style="width: 220px"></el-input>
             <el-button type="primary" class="ml30" @click='searchAccount()'>搜索</el-button>
-            <el-button  @click='reasetForm'>重置</el-button>
+            <el-button @click='reasetForm'>重置</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -187,7 +187,7 @@
     name: 'accountManage',
     data() {
       return {
-        loading:true,
+        loading: true,
         accountActive: 1, //默认选中账户总览
         allAccountTotal: 0, //账户总览总条数
         outTotal: 0, //余额支出总条数
@@ -355,9 +355,9 @@
         Income(param).then((res) => {
           _this.IncomeData = res.data.list
           _this.intoTotal = parseInt(res.data.total)
-          if(res.data.list.length > 0){
+          if (res.data.list.length > 0) {
             _this.AccumulatedIncome = res.data.list[0].AccumulatedIncome
-          }else{
+          } else {
             _this.AccumulatedIncome = 0
           }
         })
@@ -377,12 +377,12 @@
         Income(param).then((res) => {
           _this.expenditureData = res.data.list
           _this.outTotal = parseInt(res.data.total)
-          if(res.data.list.length > 0){
+          if (res.data.list.length > 0) {
             _this.AccumulatedExpenditure = res.data.list[0].AccumulatedExpenditure
-          }else{
+          } else {
             _this.AccumulatedExpenditure = 0
           }
-          
+
         })
       },
       //充值
