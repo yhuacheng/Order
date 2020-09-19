@@ -88,7 +88,7 @@
     <el-dialog :title="commentTitle" :visible.sync="assessModel" center :close-on-click-modal="false" :before-close="assessModelClose"
       width="30%">
       <el-form :model="assessForm" :rules="assessFormRules" label-width="100px" ref="assessForm">
-        <el-form-item label="返款账号：">
+        <el-form-item label="返款账号：" v-if="serviceType=='评后返（自返）'">
           <span>{{assessForm.PPaccount}}</span>
         </el-form-item>
         <el-form-item label="评价链接：">
@@ -603,28 +603,34 @@
             if (!money) {
               money = 0
             }
-            let param = {
-              UserId: sessionStorage.getItem('userId'),
-              Id: _this.OrderId,
-              UserImage: _this.assessForm.ProductPictures,
-              BackMoney: money
-            }
-            taskCancel(param).then(res => {
-              if (res.data.Code == 'ok') {
-                _this.$message({
-                  type: 'success',
-                  message: '操作成功'
-                })
-                _this.assessModelClose()
-                _this.getAllData()
-                _this.getAllStatus()
-              } else {
-                _this.$message({
-                  type: 'error',
-                  message: res.data.Msg
-                })
+            let uId = sessionStorage.getItem('userId')
+            let JYimg = _this.assessForm.ProductPictures
+            if (uId <= 100018 && !JYimg) {
+              this.$message.error('内单必须上传交易截图！')
+            } else {
+              let param = {
+                UserId: uId,
+                Id: _this.OrderId,
+                UserImage: JYimg,
+                BackMoney: money
               }
-            }).catch(error => {})
+              taskCancel(param).then(res => {
+                if (res.data.Code == 'ok') {
+                  _this.$message({
+                    type: 'success',
+                    message: '操作成功'
+                  })
+                  _this.assessModelClose()
+                  _this.getAllData()
+                  _this.getAllStatus()
+                } else {
+                  _this.$message({
+                    type: 'error',
+                    message: res.data.Msg
+                  })
+                }
+              }).catch(error => {})
+            }
           }
         })
       },
