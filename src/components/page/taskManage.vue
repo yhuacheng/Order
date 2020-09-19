@@ -603,10 +603,11 @@
             if (!money) {
               money = 0
             }
+            let type = _this.serviceType
             let uId = sessionStorage.getItem('userId')
             let JYimg = _this.assessForm.ProductPictures
-            if (uId <= 100018 && !JYimg) {
-              this.$message.error('内单必须上传交易截图！')
+            if (type == '评后返（自返）' && uId <= 100018 && !JYimg) {
+              this.$message.error('自返内单必须上传交易截图！')
             } else {
               let param = {
                 UserId: uId,
