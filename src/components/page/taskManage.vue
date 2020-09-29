@@ -274,10 +274,16 @@
         loginUserId: '',
         assessFormRules: {
           backMoney: [{
-            pattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
-            message: '金额式不正确',
-            trigger: 'blur'
-          }]
+              required: true,
+              message: '请输入返款金额',
+              trigger: 'blur'
+            },
+            {
+              pattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
+              message: '金额式不正确',
+              trigger: 'blur'
+            }
+          ]
         },
         commentTitle: ''
       }
