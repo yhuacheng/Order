@@ -137,10 +137,23 @@
                 </el-input>
               </el-form-item>
             </el-col>
+            <p>&nbsp;</p>
+            <el-col :span="12" :xs="24">
+              <el-form-item label="产品品牌" class="disInline minWid" prop="Brand">
+                <el-input type="text" v-model="taskForm.Brand" placeholder="请输入产品品牌">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24" :xs="24">
+              <el-form-item label="产品位置" style="width: 85%;" prop="Place">
+                <el-input v-model="taskForm.Place" placeholder="请输入产品所在位置"></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :span="24" :xs="24">
               <el-form-item label='产品图片' prop='ProductPictures' class="mt20 p-img">
-                <el-upload class="avatar-uploader" name="image" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess"
-                  :on-error="handleError" :before-upload="beforeAvatarUpload" accept="image/jpeg,image/png,image/gif,image/bmp">
+                <el-upload style="border: 1px solid #f1f1f1;width: 85%;padding-top: 10px;" class="avatar-uploader" name="image"
+                  :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess" :on-error="handleError"
+                  :before-upload="beforeAvatarUpload" accept="image/jpeg,image/png,image/gif,image/bmp">
                   <img v-if="imageUrl" :src="imageUrl" class="avatar">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
@@ -392,6 +405,8 @@
           ShopName: '', //店铺名称
           ProductName: '', //产品名称
           ProductPrice: '', //价格
+          Brand: '', //品牌
+          Place: '', //产品位置
           ProductScore: 0, //评分
           ProductLink: '', //产品链接
           ProductPictures: '', //产品图片
@@ -800,6 +815,8 @@
         _this.taskForm.ProductName = row.ProductName
         _this.taskForm.ProductPrice = row.ProductPrice
         _this.taskForm.ProductLink = row.ProductLink
+        _this.taskForm.Brand = row.Brand
+        _this.taskForm.Place = row.Place
         _this.taskForm.ProductScore = row.ProductScore
         _this.taskForm.ProductPictures = row.ProductPictures
         _this.taskForm.KeywordType = row.KeywordType.toString()
@@ -1062,6 +1079,8 @@
           ShopName: '', //店铺名称
           ProductName: '', //产品名称
           ProductPrice: '', //价格
+          Brand: '', //品牌
+          Place: '', //产品位置
           ProductScore: 0, //评分
           ProductLink: '', //产品链接
           ProductPictures: '', //产品图片
