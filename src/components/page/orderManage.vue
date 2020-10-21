@@ -111,17 +111,17 @@
             </el-col>
             <el-col :span="12" :xs="24">
               <el-form-item label="产品ASIN" class="disInline minWid" prop="Asin">
-                <el-input v-model="taskForm.Asin" maxlength="10" show-word-limit placeholder="长度为10的数字和字母组合"></el-input>
+                <el-input v-model="taskForm.Asin" maxlength="10" show-word-limit class="limit-txt-s" placeholder="长度为10的数字和字母组合"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24" :xs="24">
               <el-form-item label="产品名称" style="width: 85%;" prop="ProductName">
-                <el-input v-model="taskForm.ProductName" maxlength="500" show-word-limit placeholder="请输入产品名称"></el-input>
+                <el-input v-model="taskForm.ProductName" maxlength="500" show-word-limit class="limit-txt" placeholder="请输入产品名称"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24" :xs="24">
               <el-form-item label="产品链接" style="width: 85%;" prop="ProductLink">
-                <el-input v-model="taskForm.ProductLink" maxlength="500" show-word-limit placeholder="请以http://或者https://开头"></el-input>
+                <el-input v-model="taskForm.ProductLink" maxlength="500" show-word-limit class="limit-txt" placeholder="请以http://或者https://开头"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12" :xs="24">
@@ -140,13 +140,14 @@
             <p>&nbsp;</p>
             <el-col :span="12" :xs="24">
               <el-form-item label="产品品牌" class="disInline minWid" prop="Brand">
-                <el-input type="text" v-model="taskForm.Brand" placeholder="请输入产品品牌">
+                <el-input type="text" v-model="taskForm.Brand" maxlength="50" show-word-limit class="limit-txt-s"
+                  placeholder="请输入产品品牌">
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24" :xs="24">
               <el-form-item label="产品位置" style="width: 85%;" prop="Place">
-                <el-input v-model="taskForm.Place" placeholder="请输入产品所在位置"></el-input>
+                <el-input v-model="taskForm.Place" maxlength="500" show-word-limit class="limit-txt" placeholder="请输入产品所在位置"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24" :xs="24">
@@ -172,7 +173,8 @@
             </el-col>
             <el-col :span="24" :xs="24">
               <el-form-item label="关键词" style="width: 85%;" prop="ProductKeyword">
-                <el-input v-model="taskForm.ProductKeyword" :rows="5" maxlength="500" show-word-limit placeholder='请输入关键词'></el-input>
+                <el-input v-model="taskForm.ProductKeyword" :rows="5" maxlength="500" show-word-limit class="limit-txt"
+                  placeholder='请输入关键词'></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12" :xs="24">

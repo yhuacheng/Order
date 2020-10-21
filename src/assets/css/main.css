@@ -393,6 +393,14 @@ img {
   color: #14CEB2;
 }
 
+.limit-txt input {
+  padding-right: 86px;
+}
+
+.limit-txt-s input {
+  padding-right: 52px;
+}
+
 /* 模态框纵向外滚动条改为内滚动条 */
 
 
