@@ -505,6 +505,16 @@
             required: true,
             message: '请输入关键词',
             trigger: 'blur'
+          }],
+          Brand: [{
+            required: true,
+            message: '请输入产品品牌',
+            trigger: 'blur'
+          }],
+          Place: [{
+            required: true,
+            message: '请输入产品位置',
+            trigger: 'blur'
           }]
         },
         obj: [],
