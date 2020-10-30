@@ -245,6 +245,7 @@
           ProductPictures: '', //交易截图
           backMoney: '' //返款金额
         },
+        NoComment: '', //是否免评单
         imageUrl: '',
         obj: [],
         StatusSum: [], //任务状态数量
@@ -599,6 +600,7 @@
         _this.assessForm.backMoney = row.DealMoeny
         _this.assessForm.ProductPictures = row.DealIamge
         _this.imageUrl = row.DealIamge
+        _this.NoComment = Number(row.NoComment)
       },
       //评论确定
       evalEditSubmit() {
@@ -619,7 +621,8 @@
                 UserId: uId,
                 Id: _this.OrderId,
                 UserImage: JYimg,
-                BackMoney: money
+                BackMoney: money,
+                NoComment: _this.NoComment
               }
               taskCancel(param).then(res => {
                 if (res.data.Code == 'ok') {
@@ -654,6 +657,7 @@
         _this.assessForm.ProductPictures = ''
         _this.assessForm.backMoney = 0
         _this.imageUrl = ''
+        _this.NoComment = ''
       },
 
       // 查看任务详情
