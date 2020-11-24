@@ -25,6 +25,13 @@
           <el-form-item label="搜索内容" class="labelNum">
             <el-input v-model="searchForm.Keyword" style="width: 250px" placeholder="任务编码 / 产品名称 / 购买单号"></el-input>
           </el-form-item>
+          <el-form-item label="任务类型">
+            <el-select v-model="searchForm.serveType" placeholder="请选择">
+              <el-option :value="0" label="全部"></el-option>
+              <el-option :value="1" label="评后返（代返）"></el-option>
+              <el-option :value="2" label="评后返（自返）"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click='searchOrder' size="medium">搜索</el-button>
             <el-button @click="resetTask" size="medium">重置</el-button>
@@ -64,7 +71,7 @@
         <el-table-column prop="ProductName" label="产品名称" align="center" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="AmazonNumber" label="购买单号" align="center"></el-table-column>
         <el-table-column prop="AmazonProductPrice" label="购买价格" align="center"></el-table-column>
-        <el-table-column prop="BuyTime" label="购买时间" align="center"></el-table-column>
+        <el-table-column prop="BuyTime" label="购买时间" align="center" width="160"></el-table-column>
         <el-table-column prop="PayAccount" label="返款账号" align="center"></el-table-column>
         <el-table-column prop="state" label="状态" align="center" :formatter="txtOrderStatus"></el-table-column>
         <el-table-column label="操作" align="center">
@@ -236,7 +243,8 @@
           Keyword: '',
           orderStartTime: '',
           orderEndTime: '',
-          checkedCities: []
+          checkedCities: [],
+          serveType: 0,
         },
         // 评价
         assessForm: {
@@ -351,7 +359,8 @@
         let param = {
           userId: userId,
           countryIdx: _this.searchForm.checkedCities,
-          kWord: _this.searchForm.Keyword
+          kWord: _this.searchForm.Keyword,
+          type: _this.searchForm.serveType
         }
         taskStatus(param).then(res => {
           _this.statusList = res.data.list
@@ -368,7 +377,8 @@
           userId: userId, //用户id
           countryIdx: _this.searchForm.checkedCities, //国家数组
           kWord: _this.searchForm.Keyword, //查询（任务编码，产品名称）
-          state: parseInt(_this.active) //任务状态
+          state: parseInt(_this.active), //任务状态
+          type: _this.searchForm.serveType
         }
         taskList(param).then(res => {
           _this.loading = false
@@ -517,7 +527,8 @@
           Keyword: '',
           orderStartTime: '',
           orderEndTime: '',
-          checkedCities: []
+          checkedCities: [],
+          serveType: 0
         }
         _this.currentPage = 1
         _this.getAllData()
